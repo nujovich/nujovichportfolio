@@ -3,15 +3,18 @@
 
 <section id="about" class="py-32 px-6 max-w-6xl mx-auto">
   <div class="grid md:grid-cols-2 gap-16 items-center">
-    <!-- Avatar / visual -->
+    <!-- Avatar -->
     <div class="relative flex justify-center">
       <div class="relative w-72 h-72 md:w-96 md:h-96">
         <!-- Glow ring -->
         <div class="absolute inset-0 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 blur-2xl opacity-30 float"></div>
-        <!-- Avatar circle -->
-        <div class="relative w-full h-full rounded-full glass border-2 border-white/20 flex items-center justify-center overflow-hidden">
-          <!-- Initials fallback (swap src if you have a photo) -->
-          <span class="text-8xl font-extrabold gradient-text select-none">NU</span>
+        <!-- Photo -->
+        <div class="relative w-full h-full rounded-full border-2 border-white/20 overflow-hidden shadow-2xl">
+          <img
+            src="/nadia.jpg"
+            alt="Nadia Ujovich"
+            class="w-full h-full object-cover object-top"
+          />
         </div>
         <!-- Floating badge: experience -->
         <div class="absolute -bottom-4 -right-4 glass rounded-2xl px-4 py-3 text-center shadow-xl">
@@ -32,6 +35,20 @@
       <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
         Hola, soy <span class="gradient-text">Nadia</span>
       </h2>
+
+      <!-- WTM Ambassador badge -->
+      <a
+        href="https://wtmgdgmadrid.github.io/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-300 text-sm font-medium hover:bg-purple-500/20 transition-colors"
+      >
+        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Women Techmakers Ambassador · Madrid · desde 2023
+      </a>
+
       <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
         <p>
           Soy desarrolladora de software con más de una década de experiencia construyendo
@@ -44,8 +61,9 @@
           Creo firmemente en el aprendizaje continuo y el impacto positivo de la tecnología.
         </p>
         <p>
-          Cuando no estoy programando, estoy leyendo sobre tendencias tecnológicas,
-          explorando nuevas herramientas o creando contenido educativo para desarrolladores.
+          Como <strong class="text-purple-300">Women Techmakers Ambassador</strong> desde 2023,
+          colaboro con <a href="https://wtmgdgmadrid.github.io/" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-purple-200 underline underline-offset-2 transition-colors">WTM GDG Madrid</a>
+          para impulsar la diversidad e inclusión en el sector tecnológico.
         </p>
       </div>
 
@@ -54,7 +72,7 @@
         {[
           { icon: '🚀', label: 'Full-Stack Dev' },
           { icon: '🎤', label: 'Tech Speaker' },
-          { icon: '🎓', label: 'Educadora' },
+          { icon: '💜', label: 'WTM Ambassador' },
           { icon: '🌍', label: 'Comunidad Tech' },
         ].map(({ icon, label }) => (
           <div class="glass rounded-xl px-4 py-3 flex items-center gap-3">
