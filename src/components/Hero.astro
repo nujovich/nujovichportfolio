@@ -1,0 +1,67 @@
+---
+---
+
+<section
+  id="hero"
+  class="relative min-h-screen flex items-center justify-center overflow-hidden gradient-bg"
+>
+  <!-- Decorative orbs -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl float pointer-events-none"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-600/20 rounded-full blur-3xl float pointer-events-none" style="animation-delay: -3s;"></div>
+
+  <!-- Grid overlay -->
+  <div
+    class="absolute inset-0 opacity-10 pointer-events-none"
+    style="background-image: linear-gradient(rgba(107,156,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(107,156,255,0.3) 1px, transparent 1px); background-size: 60px 60px;"
+  ></div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+    <!-- Badge -->
+    <div class="fade-up inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-8 text-sm text-brand-400 font-medium">
+      <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+      Disponible para nuevos proyectos
+    </div>
+
+    <!-- Name -->
+    <h1 class="fade-up-delay-1 text-6xl md:text-8xl font-extrabold tracking-tight mb-6">
+      <span class="gradient-text">Nadia</span>
+      <br />
+      <span class="text-white">Ujovich</span>
+    </h1>
+
+    <!-- Tagline -->
+    <p class="fade-up-delay-2 text-xl md:text-2xl text-slate-300 mb-4 font-light">
+      Desarrolladora de Software · Tech Speaker · Educadora
+    </p>
+    <p class="fade-up-delay-2 text-base md:text-lg text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+      Construyo productos digitales con pasión, comparto conocimiento en conferencias
+      y ayudo a equipos a crecer a través de la tecnología.
+    </p>
+
+    <!-- CTAs -->
+    <div class="fade-up-delay-3 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="#projects"
+        class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-brand-500/30"
+      >
+        Ver proyectos
+      </a>
+      <a
+        href="#contact"
+        class="px-8 py-4 glass text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-white/10"
+      >
+        Contactar
+      </a>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 fade-up-delay-3">
+      <a href="#about" class="flex flex-col items-center gap-2 text-slate-500 hover:text-slate-300 transition-colors">
+        <span class="text-xs tracking-widest uppercase">Scroll</span>
+        <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

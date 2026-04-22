@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f0f4ff;
+  --color-brand-100: #e0e9ff;
+  --color-brand-200: #c1d3ff;
+  --color-brand-400: #6b9cff;
+  --color-brand-500: #3b72f5;
+  --color-brand-600: #2457d9;
+  --color-brand-700: #1a3fa6;
+  --color-brand-800: #122c73;
+  --color-brand-900: #0b1c4d;
+
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}
+
+::view-transition-old(root) {
+  animation: slide-out 0.4s ease-in-out;
+}
+
+::view-transition-new(root) {
+  animation: slide-in 0.4s ease-in-out;
+}
+
+@keyframes slide-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-20px); }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6b9cff, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(59, 114, 245, 0.2);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+.float { animation: float 6s ease-in-out infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up          { animation: fade-up 0.7s ease-out forwards; }
+.fade-up-delay-1  { animation: fade-up 0.7s 0.15s ease-out both; }
+.fade-up-delay-2  { animation: fade-up 0.7s 0.30s ease-out both; }
+.fade-up-delay-3  { animation: fade-up 0.7s 0.45s ease-out both; }
+
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.gradient-bg {
+  background: linear-gradient(-45deg, #0b1c4d, #122c73, #1a3fa6, #3b2d8f);
+  background-size: 400% 400%;
+  animation: gradient-shift 12s ease infinite;
+}

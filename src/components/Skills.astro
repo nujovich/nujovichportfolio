@@ -1,0 +1,52 @@
+---
+const categories = [
+  {
+    label: 'Frontend',
+    icon: '🎨',
+    skills: ['React', 'Astro', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Vue.js'],
+  },
+  {
+    label: 'Backend',
+    icon: '⚙️',
+    skills: ['Node.js', 'Python', 'REST APIs', 'GraphQL', 'PostgreSQL', 'MongoDB'],
+  },
+  {
+    label: 'DevOps & Cloud',
+    icon: '☁️',
+    skills: ['Docker', 'AWS', 'CI/CD', 'Git', 'Linux', 'Kubernetes'],
+  },
+  {
+    label: 'Seguridad',
+    icon: '🔒',
+    skills: ['OWASP Top 10', 'Pentesting Web', 'Auth & OAuth', 'HTTPS/TLS', 'Seguridad API'],
+  },
+];
+---
+
+<section id="skills" class="py-32 px-6 bg-slate-900/50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Tecnologías</p>
+      <h2 class="text-4xl md:text-5xl font-extrabold text-white">
+        Mi stack <span class="gradient-text">tecnológico</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {categories.map(({ label, icon, skills }) => (
+        <div class="glass rounded-2xl p-6 card-hover">
+          <div class="text-3xl mb-3">{icon}</div>
+          <h3 class="text-lg font-bold text-white mb-4">{label}</h3>
+          <ul class="space-y-2">
+            {skills.map(skill => (
+              <li class="flex items-center gap-2 text-sm text-slate-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-400 shrink-0"></span>
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,100 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Nadia Ujovich — Developer & Tech Speaker',
+  description = 'Portfolio of Nadia Ujovich — software developer, tech speaker and educator passionate about building great products.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+
+  <body class="bg-slate-950 text-slate-100 font-[Inter,sans-serif] antialiased">
+    <!-- Nav -->
+    <header
+      id="navbar"
+      class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      transition:persist
+    >
+      <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold gradient-text hover:opacity-80 transition-opacity">
+          Nadia Ujovich
+        </a>
+        <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+          <li><a href="#about"    class="hover:text-white transition-colors">Sobre mí</a></li>
+          <li><a href="#skills"   class="hover:text-white transition-colors">Skills</a></li>
+          <li><a href="#projects" class="hover:text-white transition-colors">Proyectos</a></li>
+          <li><a href="#videos"   class="hover:text-white transition-colors">Videos</a></li>
+          <li><a href="#contact"  class="hover:text-white transition-colors">Contacto</a></li>
+        </ul>
+        <!-- Mobile menu button -->
+        <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </nav>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10">
+        <ul class="flex flex-col gap-4 px-6 py-4 text-sm font-medium text-slate-300">
+          <li><a href="#about"    class="hover:text-white transition-colors block py-1">Sobre mí</a></li>
+          <li><a href="#skills"   class="hover:text-white transition-colors block py-1">Skills</a></li>
+          <li><a href="#projects" class="hover:text-white transition-colors block py-1">Proyectos</a></li>
+          <li><a href="#videos"   class="hover:text-white transition-colors block py-1">Videos</a></li>
+          <li><a href="#contact"  class="hover:text-white transition-colors block py-1">Contacto</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-white/10 py-10 text-center text-slate-500 text-sm">
+      <p>© {new Date().getFullYear()} Nadia Ujovich — Hecho con <span class="text-brand-400">♥</span> en Astro</p>
+    </footer>
+
+    <script>
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar?.classList.add('glass', 'shadow-lg');
+        } else {
+          navbar?.classList.remove('glass', 'shadow-lg');
+        }
+      });
+
+      // Mobile menu toggle
+      const toggle = document.getElementById('menu-toggle');
+      const menu   = document.getElementById('mobile-menu');
+      toggle?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+
+      // Close mobile menu on link click
+      menu?.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => menu.classList.add('hidden'))
+      );
+    </script>
+  </body>
+</html>

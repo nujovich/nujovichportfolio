@@ -1,0 +1,68 @@
+---
+---
+
+<section id="about" class="py-32 px-6 max-w-6xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-16 items-center">
+    <!-- Avatar / visual -->
+    <div class="relative flex justify-center">
+      <div class="relative w-72 h-72 md:w-96 md:h-96">
+        <!-- Glow ring -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 blur-2xl opacity-30 float"></div>
+        <!-- Avatar circle -->
+        <div class="relative w-full h-full rounded-full glass border-2 border-white/20 flex items-center justify-center overflow-hidden">
+          <!-- Initials fallback (swap src if you have a photo) -->
+          <span class="text-8xl font-extrabold gradient-text select-none">NU</span>
+        </div>
+        <!-- Floating badge: experience -->
+        <div class="absolute -bottom-4 -right-4 glass rounded-2xl px-4 py-3 text-center shadow-xl">
+          <p class="text-2xl font-bold text-white">+10</p>
+          <p class="text-xs text-slate-400 leading-tight">años de<br/>experiencia</p>
+        </div>
+        <!-- Floating badge: talks -->
+        <div class="absolute -top-4 -left-4 glass rounded-2xl px-4 py-3 text-center shadow-xl">
+          <p class="text-2xl font-bold text-white">+30</p>
+          <p class="text-xs text-slate-400 leading-tight">charlas<br/>dadas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div>
+      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Sobre mí</p>
+      <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
+        Hola, soy <span class="gradient-text">Nadia</span>
+      </h2>
+      <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+        <p>
+          Soy desarrolladora de software con más de una década de experiencia construyendo
+          productos digitales escalables. Me apasiona el código limpio, la experiencia
+          de usuario y compartir conocimiento con la comunidad.
+        </p>
+        <p>
+          He hablado en conferencias de tecnología latinoamericanas y españolas,
+          impartido talleres y contribuido activamente a la comunidad tech.
+          Creo firmemente en el aprendizaje continuo y el impacto positivo de la tecnología.
+        </p>
+        <p>
+          Cuando no estoy programando, estoy leyendo sobre tendencias tecnológicas,
+          explorando nuevas herramientas o creando contenido educativo para desarrolladores.
+        </p>
+      </div>
+
+      <!-- Highlights -->
+      <div class="grid grid-cols-2 gap-4 mt-8">
+        {[
+          { icon: '🚀', label: 'Full-Stack Dev' },
+          { icon: '🎤', label: 'Tech Speaker' },
+          { icon: '🎓', label: 'Educadora' },
+          { icon: '🌍', label: 'Comunidad Tech' },
+        ].map(({ icon, label }) => (
+          <div class="glass rounded-xl px-4 py-3 flex items-center gap-3">
+            <span class="text-2xl">{icon}</span>
+            <span class="text-sm font-medium text-slate-200">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
