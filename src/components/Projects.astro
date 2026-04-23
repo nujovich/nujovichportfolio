@@ -1,11 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import mermeladaLogo from '../assets/mermelada.png';
+
 const projects = [
   {
     title: 'Mermelada Tech',
     description:
       'Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Organizo meetups, workshops y charlas para impulsar la diversidad en el sector.',
     tags: ['Comunidad', 'Tech', 'Inclusión'],
-    logo: '/mermelada.png',
+    logo: mermeladaLogo,
     url: 'https://linktr.ee/mermeladatech',
     featured: true,
   },
@@ -57,8 +60,8 @@ const projects = [
       >
         <div class="flex items-start justify-between mb-4">
           {logo
-            ? <img src={logo} alt={title} class="h-16 w-auto object-contain" />
-            : <span class="text-4xl">{icon}</span>
+            ? <Image src={logo} alt={title} height={64} width={64} class="h-16 w-auto object-contain" loading="lazy" />
+            : <span class="text-4xl" aria-hidden="true">{icon}</span>
           }
           {featured && (
             <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">

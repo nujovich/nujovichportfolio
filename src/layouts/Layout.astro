@@ -35,6 +35,8 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="800" />
     <meta property="og:image:alt" content="Nadia Ujovich — Desarrolladora & Tech Speaker" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="Nadia Ujovich" />
@@ -84,17 +86,33 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
     <meta name="theme-color" content="#0f172a" />
 
-    <!-- Fonts -->
+    <!-- Fonts: async load to avoid render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <ClientRouter />
   </head>
 
   <body class="bg-slate-950 text-slate-100 font-[Inter,sans-serif] antialiased">
+    <!-- Skip to content link for keyboard/screen-reader users -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-slate-900 focus:text-white focus:rounded-lg focus:ring-2 focus:ring-brand-400"
+    >
+      Saltar al contenido principal
+    </a>
+
     <!-- Nav -->
     <header
       id="navbar"
@@ -112,8 +130,14 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
           <li><a href="#videos"   class="hover:text-white transition-colors">Videos</a></li>
           <li><a href="#contact"  class="hover:text-white transition-colors">Contacto</a></li>
         </ul>
-        <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button
+          id="menu-toggle"
+          class="md:hidden text-slate-300 hover:text-white"
+          aria-label="Abrir menú de navegación"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
@@ -129,7 +153,7 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
       </div>
     </header>
 
-    <main>
+    <main id="main-content">
       <slot />
     </main>
 
@@ -149,9 +173,18 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
 
       const toggle = document.getElementById('menu-toggle');
       const menu   = document.getElementById('mobile-menu');
-      toggle?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+      toggle?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden');
+        const isOpen = !menu?.classList.contains('hidden');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+      });
       menu?.querySelectorAll('a').forEach(a =>
-        a.addEventListener('click', () => menu.classList.add('hidden'))
+        a.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          toggle?.setAttribute('aria-expanded', 'false');
+          toggle?.setAttribute('aria-label', 'Abrir menú de navegación');
+        })
       );
     </script>
   </body>
