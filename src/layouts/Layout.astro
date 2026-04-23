@@ -8,9 +8,12 @@ interface Props {
 }
 
 const {
-  title = 'Nadia Ujovich — Developer & Tech Speaker',
-  description = 'Portfolio of Nadia Ujovich — software developer, tech speaker and educator passionate about building great products.',
+  title = 'Nadia Ujovich — Desarrolladora, Tech Speaker & WTM Ambassador',
+  description = 'Portfolio de Nadia Ujovich, desarrolladora de software full-stack, tech speaker, Women Techmakers Ambassador en Madrid y co-fundadora de Mermelada Tech.',
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, 'https://nadiaujovich.dev');
+const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
 ---
 
 <!doctype html>
@@ -18,11 +21,70 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Nadia Ujovich" />
+    <meta name="keywords" content="Nadia Ujovich, desarrolladora software, tech speaker, Women Techmakers Ambassador, Mermelada Tech, Madrid, full-stack developer, Astro, React, seguridad web" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph (LinkedIn, Facebook, WhatsApp) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="Nadia Ujovich — Desarrolladora & Tech Speaker" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Nadia Ujovich" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@nujovich" />
+    <meta name="twitter:creator" content="@nujovich" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- JSON-LD structured data — Google usa esto para el Knowledge Panel -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Nadia Ujovich",
+        "url": "https://nadiaujovich.dev",
+        "image": "https://nadiaujovich.dev/nadia.jpeg",
+        "email": "nujovich@gmail.com",
+        "jobTitle": "Desarrolladora de Software & Tech Speaker",
+        "description": "Desarrolladora full-stack, Women Techmakers Ambassador en Madrid y co-fundadora de Mermelada Tech.",
+        "sameAs": [
+          "https://linkedin.com/in/nadiaujovich",
+          "https://github.com/nujovich",
+          "https://twitter.com/nujovich",
+          "https://linktr.ee/mermeladatech",
+          "https://www.youtube.com/@mermeladatech"
+        ],
+        "knowsAbout": ["JavaScript", "TypeScript", "React", "Astro", "Seguridad Web", "Node.js"],
+        "memberOf": {
+          "@type": "Organization",
+          "name": "Women Techmakers",
+          "url": "https://wtmgdgmadrid.github.io/"
+        },
+        "founder": {
+          "@type": "Organization",
+          "name": "Mermelada Tech",
+          "url": "https://linktr.ee/mermeladatech"
+        }
+      }
+    </script>
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
     <meta name="theme-color" content="#0f172a" />
-    <title>{title}</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -50,14 +112,12 @@ const {
           <li><a href="#videos"   class="hover:text-white transition-colors">Videos</a></li>
           <li><a href="#contact"  class="hover:text-white transition-colors">Contacto</a></li>
         </ul>
-        <!-- Mobile menu button -->
         <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </nav>
-      <!-- Mobile menu -->
       <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10">
         <ul class="flex flex-col gap-4 px-6 py-4 text-sm font-medium text-slate-300">
           <li><a href="#about"    class="hover:text-white transition-colors block py-1">Sobre mí</a></li>
@@ -78,7 +138,6 @@ const {
     </footer>
 
     <script>
-      // Navbar scroll effect
       const navbar = document.getElementById('navbar');
       window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -88,12 +147,9 @@ const {
         }
       });
 
-      // Mobile menu toggle
       const toggle = document.getElementById('menu-toggle');
       const menu   = document.getElementById('mobile-menu');
       toggle?.addEventListener('click', () => menu?.classList.toggle('hidden'));
-
-      // Close mobile menu on link click
       menu?.querySelectorAll('a').forEach(a =>
         a.addEventListener('click', () => menu.classList.add('hidden'))
       );
