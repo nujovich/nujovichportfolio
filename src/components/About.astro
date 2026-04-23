@@ -14,6 +14,10 @@
             src="/nadia.jpeg"
             alt="Nadia Ujovich"
             class="w-full h-full object-cover object-top"
+            width="800"
+            height="800"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <!-- Floating badge: experience -->
@@ -76,7 +80,7 @@
           { icon: '🌍', label: 'Comunidad Tech' },
         ].map(({ icon, label }) => (
           <div class="glass rounded-xl px-4 py-3 flex items-center gap-3">
-            <span class="text-2xl">{icon}</span>
+            <span class="text-2xl" aria-hidden="true">{icon}</span>
             <span class="text-sm font-medium text-slate-200">{label}</span>
           </div>
         ))}

@@ -66,14 +66,29 @@ const videos = [
     <!-- Featured video -->
     <div class="mb-10 glass rounded-2xl overflow-hidden card-hover">
       <div class="aspect-video w-full">
-        <iframe
-          class="w-full h-full"
-          src={`https://www.youtube.com/embed/${videos[0].id}`}
-          title={videos[0].title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          loading="lazy"
-        ></iframe>
+        <button
+          class="yt-facade relative w-full h-full cursor-pointer group block"
+          data-id={videos[0].id}
+          data-title={videos[0].title}
+          aria-label={`Reproducir: ${videos[0].title}`}
+        >
+          <img
+            src={`https://img.youtube.com/vi/${videos[0].id}/hqdefault.jpg`}
+            alt=""
+            width="480"
+            height="360"
+            loading="eager"
+            decoding="async"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-white ml-1.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+        </button>
       </div>
       <div class="p-6">
         <div class="flex items-center gap-3 mb-3">
@@ -92,14 +107,29 @@ const videos = [
       {videos.slice(1).map(({ id, title, description, tag }) => (
         <div class="glass rounded-2xl overflow-hidden card-hover">
           <div class="aspect-video w-full">
-            <iframe
-              class="w-full h-full"
-              src={`https://www.youtube.com/embed/${id}`}
-              title={title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              loading="lazy"
-            ></iframe>
+            <button
+              class="yt-facade relative w-full h-full cursor-pointer group block"
+              data-id={id}
+              data-title={title}
+              aria-label={`Reproducir: ${title}`}
+            >
+              <img
+                src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                alt=""
+                width="480"
+                height="360"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg class="w-5 h-5 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+            </button>
           </div>
           <div class="p-5">
             <span class="text-xs text-slate-500 block mb-2">{tag}</span>
@@ -111,3 +141,20 @@ const videos = [
     </div>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.yt-facade').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const title = btn.dataset.title ?? '';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      iframe.title = title;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      iframe.className = 'w-full h-full';
+      iframe.style.border = '0';
+      btn.replaceWith(iframe);
+    });
+  });
+</script>
