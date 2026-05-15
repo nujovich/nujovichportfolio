@@ -1,52 +1,61 @@
 ---
-import { Image } from 'astro:assets';
-import mermeladaLogo from '../assets/mermelada.png';
+import { Image } from "astro:assets";
+import mermeladaLogo from "../assets/mermelada.png";
 
 const projects = [
   {
-    title: 'Mermelada Tech',
+    title: "Mermelada Tech",
     description:
-      'Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Organizo meetups, workshops y charlas para impulsar la diversidad en el sector.',
-    tags: ['Comunidad', 'Tech', 'Inclusión'],
+      "Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Organizo meetups, workshops y charlas para impulsar la diversidad en el sector.",
+    tags: ["Comunidad", "Tech", "Inclusión"],
     logo: mermeladaLogo,
-    url: 'https://linktr.ee/mermeladatech',
+    url: "https://linktr.ee/mermeladatech",
     featured: true,
   },
   {
-    title: 'Mint',
+    title: "Awake",
     description:
-      'Herramienta de desarrollo open source para auditar CSS. Cuenta con playground web y CLI, actualmente en pre-release y en construcción activa.',
-    tags: ['CSS', 'DevTool', 'Open Source'],
-    icon: '🌱',
-    url: 'https://github.com/nujovich/mint',
+      "Diseño y desarrollo de la web de Awake, una agencia de marketing digital en Alicante. Una presencia online moderna y cuidada para impulsar su crecimiento.",
+    tags: ["Web", "Marketing", "Alicante"],
+    logoUrl: "/awake-logo.svg",
+    url: "https://www.awakemarketing.es/",
+    featured: true,
+  },
+  {
+    title: "Mint",
+    description:
+      "Herramienta de desarrollo open source para auditar CSS. Cuenta con playground web y CLI, actualmente en pre-release y en construcción activa.",
+    tags: ["CSS", "DevTool", "Open Source"],
+    icon: "🌱",
+    url: "https://github.com/nujovich/mint",
     featured: false,
     inProgress: true,
   },
   {
-    title: 'WTM GDG Madrid',
+    title: "WTM GDG Madrid",
     description:
-      'Contribuyo al desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como parte de mi rol como Ambassador desde 2023.',
-    tags: ['WTM', 'GDG', 'Open Source'],
-    icon: '💜',
-    url: 'https://wtmgdgmadrid.github.io/',
+      "Contribuyo al desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como parte de mi rol como Ambassador desde 2023.",
+    tags: ["WTM", "GDG", "Open Source"],
+    logoUrl: "/wtm-madrid-logo.png",
+    url: "https://wtmgdgmadrid.github.io/",
     featured: false,
   },
   {
-    title: 'Seguridad Web',
+    title: "Seguridad Web",
     description:
-      'Charlas y talleres sobre OWASP Top 10, buenas prácticas de seguridad web y cómo proteger aplicaciones modernas ante las amenazas más comunes.',
-    tags: ['Seguridad', 'OWASP', 'Web'],
-    icon: '🔐',
-    url: '#videos',
+      "Charlas y talleres sobre OWASP Top 10, buenas prácticas de seguridad web y cómo proteger aplicaciones modernas ante las amenazas más comunes.",
+    tags: ["Seguridad", "OWASP", "Web"],
+    icon: "🔐",
+    url: "#videos",
     featured: false,
   },
   {
-    title: 'Commit Conf 2024',
+    title: "Commit Conf 2024",
     description:
-      'Participación como speaker en una de las conferencias de desarrollo de software más importantes de España, con ponencias sobre tecnología moderna.',
-    tags: ['Speaker', 'Conferencia', 'España'],
-    icon: '🎤',
-    url: '#videos',
+      "Participación como speaker en una de las conferencias de desarrollo de software más importantes de España, con ponencias sobre tecnología moderna.",
+    tags: ["Speaker", "Conferencia", "España"],
+    icon: "🎤",
+    url: "#videos",
     featured: false,
   },
 ];
@@ -54,47 +63,86 @@ const projects = [
 
 <section id="projects" class="py-32 px-6 max-w-6xl mx-auto">
   <div class="text-center mb-16">
-    <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Proyectos & Charlas</p>
+    <p
+      class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3"
+    >
+      Proyectos & Charlas
+    </p>
     <h2 class="text-4xl md:text-5xl font-extrabold text-white">
       Lo que he <span class="gradient-text">construido</span>
     </h2>
   </div>
 
   <div class="grid md:grid-cols-2 gap-6">
-    {projects.map(({ title, description, tags, icon, logo, url, featured, inProgress }) => (
-      <a
-        href={url}
-        target={url.startsWith('http') ? '_blank' : undefined}
-        rel={url.startsWith('http') ? 'noopener noreferrer' : undefined}
-        class={`glass rounded-2xl p-8 card-hover group block ${featured ? 'md:col-span-2 bg-gradient-to-br from-brand-900/30 to-accent-600/10' : ''}`}
-      >
-        <div class="flex items-start justify-between mb-4">
-          {logo
-            ? <Image src={logo} alt={title} height={64} width={64} class="h-16 w-auto object-contain" loading="lazy" />
-            : <span class="text-4xl" aria-hidden="true">{icon}</span>
-          }
-          {featured && (
-            <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
-              Destacado
-            </span>
-          )}
-          {inProgress && (
-            <span class="text-xs font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-3 py-1 inline-flex items-center gap-1.5">
-              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              En curso
-            </span>
-          )}
-        </div>
-        <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">{title}</h3>
-        <p class="text-slate-400 leading-relaxed mb-6 text-sm">{description}</p>
-        <div class="flex flex-wrap gap-2">
-          {tags.map(tag => (
-            <span class="text-xs font-medium px-3 py-1 bg-white/5 border border-white/10 rounded-full text-slate-300">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </a>
-    ))}
+    {
+      projects.map(
+        ({
+          title,
+          description,
+          tags,
+          icon,
+          logo,
+          logoUrl,
+          url,
+          featured,
+          inProgress,
+        }) => (
+          <a
+            href={url}
+            target={url.startsWith("http") ? "_blank" : undefined}
+            rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
+            class={`glass rounded-2xl p-8 card-hover group block ${featured ? "md:col-span-2 bg-gradient-to-br from-brand-900/30 to-accent-600/10" : ""}`}
+          >
+            <div class="flex items-start justify-between mb-4">
+              {logo ? (
+                <Image
+                  src={logo}
+                  alt={title}
+                  height={64}
+                  width={64}
+                  class="h-16 w-auto object-contain"
+                  loading="lazy"
+                />
+              ) : logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={title}
+                  class="h-16 w-auto object-contain"
+                  loading="lazy"
+                />
+              ) : (
+                <span class="text-4xl" aria-hidden="true">
+                  {icon}
+                </span>
+              )}
+              {featured && (
+                <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
+                  Destacado
+                </span>
+              )}
+              {inProgress && (
+                <span class="text-xs font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-3 py-1 inline-flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  En curso
+                </span>
+              )}
+            </div>
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">
+              {title}
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-6 text-sm">
+              {description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="text-xs font-medium px-3 py-1 bg-white/5 border border-white/10 rounded-full text-slate-300">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </a>
+        ),
+      )
+    }
   </div>
 </section>
