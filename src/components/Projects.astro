@@ -62,7 +62,7 @@ const projects = [
 ---
 
 <section id="projects" class="py-32 px-6 max-w-6xl mx-auto">
-  <div class="text-center mb-16">
+  <div class="text-center mb-16" data-reveal>
     <p
       class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3"
     >
@@ -76,22 +76,27 @@ const projects = [
   <div class="grid md:grid-cols-2 gap-6">
     {
       projects.map(
-        ({
-          title,
-          description,
-          tags,
-          icon,
-          logo,
-          logoUrl,
-          url,
-          featured,
-          inProgress,
-        }) => (
+        (
+          {
+            title,
+            description,
+            tags,
+            icon,
+            logo,
+            logoUrl,
+            url,
+            featured,
+            inProgress,
+          },
+          idx,
+        ) => (
           <a
             href={url}
             target={url.startsWith("http") ? "_blank" : undefined}
             rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
-            class={`glass rounded-2xl p-8 card-hover group block ${featured ? "md:col-span-2 bg-gradient-to-br from-brand-900/30 to-accent-600/10" : ""}`}
+            data-reveal
+            style={`--reveal-delay: ${idx * 80}ms`}
+            class={`glass rounded-2xl p-8 card-hover card-distort group block ${featured ? "md:col-span-2 bg-gradient-to-br from-brand-900/30 to-accent-600/10" : ""}`}
           >
             <div class="flex items-start justify-between mb-4">
               {logo ? (
