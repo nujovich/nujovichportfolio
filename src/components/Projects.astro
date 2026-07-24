@@ -61,93 +61,128 @@ const projects = [
 ];
 ---
 
-<section id="projects" class="py-32 px-6 max-w-6xl mx-auto">
-  <div class="text-center mb-16" data-reveal>
-    <p
-      class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3"
-    >
-      Proyectos & Charlas
-    </p>
-    <h2 class="text-4xl md:text-5xl font-extrabold text-white">
-      Lo que he <span class="gradient-text">construido</span>
-    </h2>
-  </div>
+<section
+  id="projects"
+  class="relative bg-slate-950"
+  data-horizontal-scroll
+>
+  <div
+    data-horizontal-pin
+    class="sticky top-0 h-screen overflow-hidden flex flex-col justify-center"
+  >
+    <!-- Header on top of the pinned viewport -->
+    <div class="px-6 md:px-16 pt-24 md:pt-16 pb-8 max-w-6xl">
+      <p
+        class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3"
+        data-reveal
+      >
+        Proyectos & Charlas
+      </p>
+      <h2
+        class="text-4xl md:text-6xl font-extrabold text-white leading-[1.05]"
+        data-reveal
+        style="--reveal-delay: 80ms"
+      >
+        Lo que he <span class="gradient-text">construido</span>
+      </h2>
+      <p
+        class="text-slate-400 mt-4 max-w-xl hidden md:block"
+        data-reveal
+        style="--reveal-delay: 160ms"
+      >
+        Scrolleá para navegar el trabajo →
+      </p>
+    </div>
 
-  <div class="grid md:grid-cols-2 gap-6">
-    {
-      projects.map(
-        (
-          {
-            title,
-            description,
-            tags,
-            icon,
-            logo,
-            logoUrl,
-            url,
-            featured,
-            inProgress,
-          },
-          idx,
-        ) => (
-          <a
-            href={url}
-            target={url.startsWith("http") ? "_blank" : undefined}
-            rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
-            data-reveal
-            style={`--reveal-delay: ${idx * 80}ms`}
-            class={`glass rounded-2xl p-8 card-hover card-distort group block ${featured ? "md:col-span-2 bg-gradient-to-br from-brand-900/30 to-accent-600/10" : ""}`}
-          >
-            <div class="flex items-start justify-between mb-4">
-              {logo ? (
-                <Image
-                  src={logo}
-                  alt={title}
-                  height={64}
-                  width={64}
-                  class="h-16 w-auto object-contain"
-                  loading="lazy"
-                />
-              ) : logoUrl ? (
-                <img
-                  src={logoUrl}
-                  alt={title}
-                  class="h-16 w-auto object-contain"
-                  loading="lazy"
-                />
-              ) : (
-                <span class="text-4xl" aria-hidden="true">
-                  {icon}
-                </span>
-              )}
-              {featured && (
-                <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
-                  Destacado
-                </span>
-              )}
-              {inProgress && (
-                <span class="text-xs font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-3 py-1 inline-flex items-center gap-1.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  En curso
-                </span>
-              )}
-            </div>
-            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">
-              {title}
-            </h3>
-            <p class="text-slate-400 leading-relaxed mb-6 text-sm">
-              {description}
-            </p>
-            <div class="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span class="text-xs font-medium px-3 py-1 bg-white/5 border border-white/10 rounded-full text-slate-300">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </a>
-        ),
-      )
-    }
+    <!-- Horizontal track -->
+    <div
+      data-horizontal-track
+      class="flex gap-6 md:gap-8 px-6 md:px-16 pb-16"
+      style="width: max-content"
+    >
+      {
+        projects.map(
+          (
+            {
+              title,
+              description,
+              tags,
+              icon,
+              logo,
+              logoUrl,
+              url,
+              featured,
+              inProgress,
+            },
+            idx,
+          ) => (
+            <a
+              href={url}
+              target={url.startsWith("http") ? "_blank" : undefined}
+              rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
+              class={`glass rounded-2xl p-8 card-hover spotlight group block shrink-0 flex flex-col justify-between ${featured ? "bg-gradient-to-br from-brand-900/30 to-accent-600/10" : ""}`}
+              style={`width: min(80vw, ${featured ? "560px" : "420px"}); height: 62vh; max-height: 520px;`}
+            >
+              <div>
+                <div class="flex items-start justify-between mb-6">
+                  {logo ? (
+                    <Image
+                      src={logo}
+                      alt={title}
+                      height={72}
+                      width={72}
+                      class="h-16 w-auto object-contain"
+                      loading="lazy"
+                    />
+                  ) : logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt={title}
+                      class="h-16 w-auto object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="text-5xl" aria-hidden="true">
+                      {icon}
+                    </span>
+                  )}
+                  <div class="flex flex-col items-end gap-2">
+                    <span class="text-xs font-mono text-slate-500">
+                      {String(idx + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+                    </span>
+                    {featured && (
+                      <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
+                        Destacado
+                      </span>
+                    )}
+                    {inProgress && (
+                      <span class="text-xs font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-3 py-1 inline-flex items-center gap-1.5">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        En curso
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-brand-400 transition-colors">
+                  {title}
+                </h3>
+                <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+                  {description}
+                </p>
+              </div>
+              <div class="flex flex-wrap gap-2 mt-6">
+                {tags.map((tag) => (
+                  <span class="text-xs font-medium px-3 py-1 bg-white/5 border border-white/10 rounded-full text-slate-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </a>
+          ),
+        )
+      }
+      <!-- End spacer so last card can center nicely -->
+      <div class="shrink-0" style="width: 12vw" aria-hidden="true"></div>
+    </div>
   </div>
 </section>

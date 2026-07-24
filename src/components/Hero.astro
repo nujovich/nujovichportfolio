@@ -5,8 +5,13 @@
   id="hero"
   class="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950"
 >
-  <!-- WebGL background -->
-  <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+  <!-- WebGL background (slight parallax against page scroll) -->
+  <canvas
+    id="hero-canvas"
+    class="hero-canvas"
+    aria-hidden="true"
+    data-parallax="-0.15"
+  ></canvas>
 
   <!-- Subtle grid overlay on top of the shader -->
   <div

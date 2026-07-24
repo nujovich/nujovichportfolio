@@ -71,7 +71,7 @@ const videos = [
     </div>
 
     <!-- Featured video -->
-    <div class="mb-10 glass rounded-2xl overflow-hidden card-hover card-distort" data-reveal>
+    <div class="mb-10 glass rounded-2xl overflow-hidden card-hover spotlight" data-reveal>
       <div class="aspect-video w-full">
         <button
           class="yt-facade relative w-full h-full cursor-pointer group block"
@@ -112,7 +112,7 @@ const videos = [
     <!-- Grid of other videos -->
     <div class="grid md:grid-cols-2 gap-6">
       {videos.slice(1).map(({ id, title, description, tag }, idx) => (
-        <div class="glass rounded-2xl overflow-hidden card-hover card-distort" data-reveal style={`--reveal-delay: ${idx * 80}ms`}>
+        <div class="glass rounded-2xl overflow-hidden card-hover spotlight" data-reveal style={`--reveal-delay: ${idx * 80}ms`}>
           <div class="aspect-video w-full">
             <button
               class="yt-facade relative w-full h-full cursor-pointer group block"
