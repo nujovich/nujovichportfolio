@@ -160,7 +160,7 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
 
 [data-circular-pin] {
   perspective: 1400px;
-  perspective-origin: 50% 45%;
+  perspective-origin: 50% 50%;
 }
 
 /* Wheel: a 0x0 point at the center of the pinned viewport.
@@ -220,32 +220,6 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   z-index: 0;
 }
 
-/* Mobile fallback: linear stack, no wheel */
-[data-circular-scroll].is-mobile-fallback {
-  height: auto !important;
-}
-[data-circular-scroll].is-mobile-fallback [data-circular-pin] {
-  position: static;
-  height: auto;
-  overflow: visible;
-}
-[data-circular-scroll].is-mobile-fallback [data-circular-wheel] {
-  position: static;
-  transform: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem 1rem 4rem;
-}
-[data-circular-scroll].is-mobile-fallback [data-circular-card] {
-  position: static;
-  top: auto;
-  left: auto;
-  transform: none;
-  width: 100%;
-  opacity: 1;
-  filter: none;
-}
 
 .gradient-text {
   background: linear-gradient(135deg, #6b9cff, #a78bfa);

@@ -18,19 +18,11 @@ export function initCircularScroll() {
   const sections = document.querySelectorAll<HTMLElement>('[data-circular-scroll]');
   if (!sections.length) return;
 
-  const isNarrow = window.matchMedia('(max-width: 768px)').matches;
-
   sections.forEach((section) => {
     const wheel = section.querySelector<HTMLElement>('[data-circular-wheel]');
     if (!wheel) return;
     const cards = Array.from(wheel.querySelectorAll<HTMLElement>('[data-circular-card]'));
     if (!cards.length) return;
-
-    if (isNarrow) {
-      section.classList.add('is-mobile-fallback');
-      section.style.height = 'auto';
-      return;
-    }
 
     // arcSpan: total angle occupied by all cards. 360 = full ring.
     const arcSpan   = Number(section.dataset.arcSpan   ?? '360');
