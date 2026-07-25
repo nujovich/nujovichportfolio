@@ -155,38 +155,51 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   display: block;
 }
 
-/* Circular (ferris-wheel) scroll */
-[data-circular-scroll] {
-  position: relative;
+/* Circular (3D cylindrical carousel) scroll */
+[data-circular-scroll] { position: relative; }
+
+[data-circular-pin] {
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
 }
-/* Wheel is a 0x0 point positioned below the visible pin.
-   Its coordinate system is what all cards rotate/translate against. */
+
+/* Wheel: a 0x0 point at the center of the pinned viewport.
+   Its coordinate system is preserved in 3D so children live on a real
+   circumference around it. */
 [data-circular-wheel] {
   position: absolute;
-  top: calc(28vh + var(--radius, 1400px));
+  top: 50%;
   left: 50%;
   width: 0;
   height: 0;
-  transform: rotate(var(--wheel-rot, 0deg));
-  transform-origin: 0 0;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--wheel-rot, 0deg));
+  transform-origin: 0 0 0;
   will-change: transform;
 }
+
+/* Each card is placed on the circumference: rotate around the Y axis by its
+   base angle, then translate outward by the radius. `translate(-50%, -50%)`
+   applies first (in the card's own frame) so the card is centered on the
+   point it ends up at. */
 [data-circular-card] {
   position: absolute;
   top: 0;
   left: 0;
-  width: min(84vw, 340px);
-  transform-origin: 0 0;
+  width: min(78vw, 320px);
+  transform-style: preserve-3d;
   transform:
-    rotate(var(--base-angle, 0deg))
-    translateY(calc(var(--radius, 1400px) * -1))
+    rotateY(var(--base-angle, 0deg))
+    translateZ(var(--radius, 620px))
     translate(-50%, -50%);
-  opacity: calc(0.35 + 0.65 * var(--card-active, 0));
-  filter: blur(calc((1 - var(--card-active, 0)) * 1.5px));
-  transition: opacity 0.4s ease, filter 0.4s ease;
+  transform-origin: 0 0;
+  /* Opacity blends between back and front so back cards still peek through */
+  opacity: calc(0.28 + 0.72 * var(--card-active, 0));
+  z-index: calc(100 + (var(--card-depth, 0) * 100));
+  transition: opacity 0.5s ease;
   will-change: transform, opacity;
 }
-[data-circular-card].is-featured { width: min(86vw, 420px); }
+[data-circular-card].is-featured { width: min(80vw, 360px); }
 
 /* Center hint (subtle gradient anchor for the wheel) */
 [data-circular-scroll]::before {

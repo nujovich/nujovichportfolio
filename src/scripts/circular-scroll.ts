@@ -1,10 +1,12 @@
 /**
- * Ferris-wheel style scroll: cards are distributed along an arc, and the whole
- * wheel rotates as the user scrolls through a pinned section.
+ * 3D cylindrical carousel: cards live on the circumference of a horizontal
+ * circle. As the user scrolls the pinned section, the whole wheel rotates
+ * around its Y axis. Cards facing the camera read full opacity; cards behind
+ * the axis fade with distance so they still peek through with a lower alpha.
  *
  * Markup:
- *   <section data-circular-scroll data-arc-span="80" data-arc-radius="1400">
- *     <div data-circular-pin class="sticky top-0 h-screen overflow-hidden">
+ *   <section data-circular-scroll data-arc-span="360" data-arc-radius="620">
+ *     <div data-circular-pin>
  *       <div data-circular-wheel>
  *         <div data-circular-card>...</div>
  *         ...
@@ -30,38 +32,43 @@ export function initCircularScroll() {
       return;
     }
 
-    const arcSpan = Number(section.dataset.arcSpan   ?? '80'); // total degrees on the arc at rest
-    const radius  = Number(section.dataset.arcRadius ?? '1400');
-    // Extra rotation each end (how far the wheel can spin past the initial arc)
-    const overshoot = Number(section.dataset.arcOvershoot ?? '30');
+    // arcSpan: total angle occupied by all cards. 360 = full ring.
+    const arcSpan   = Number(section.dataset.arcSpan   ?? '360');
+    const radius    = Number(section.dataset.arcRadius ?? '620');
+    // sweep: how much the wheel rotates over the full scroll runway
+    const sweep     = Number(section.dataset.arcSweep  ?? String(arcSpan));
 
     const total = cards.length;
-    const step  = total > 1 ? arcSpan / (total - 1) : 0;
-    const start = -arcSpan / 2;
+    const step  = total > 0 ? arcSpan / total : 0;
 
-    // Position: each card at its base angle, then we rotate a shared --wheel-rot
     cards.forEach((card, i) => {
-      const angle = start + i * step;
+      const angle = -arcSpan / 2 + i * step;
       card.style.setProperty('--base-angle', `${angle}deg`);
       card.dataset.baseAngle = String(angle);
     });
 
-    // Scroll runway: enough vertical room to sweep from +overshoot to -arcSpan-overshoot
-    const totalSweep = arcSpan + overshoot * 2;
-    const runway = Math.round(totalSweep * 22); // ~22px per degree of rotation
+    // Scroll runway proportional to the sweep so 360° needs enough vertical room
+    const runway = Math.max(800, Math.round(sweep * 8));
     section.style.height = `${window.innerHeight + runway}px`;
+
+    section.style.setProperty('--radius', `${radius}px`);
+    wheel.style.setProperty('--radius', `${radius}px`);
 
     const applyRotation = (rot: number) => {
       wheel.style.setProperty('--wheel-rot', `${rot}deg`);
-      // For each card, compute distance from the "top" (angle 0 after wheel rot)
-      // and tune opacity / scale so front cards feel prominent.
       cards.forEach((card) => {
         const base = Number(card.dataset.baseAngle);
         const eff  = base + rot;
-        const dist = Math.abs(eff);
-        // active if within ~15deg of straight up
-        const active = 1 - Math.min(1, dist / 45);
+        // normalise to [-180, 180]
+        const norm = ((eff + 180) % 360 + 360) % 360 - 180;
+        const cos  = Math.cos((norm * Math.PI) / 180);
+        // active: 1 at front, ~0 at sides/back
+        const active = Math.max(0, cos);
         card.style.setProperty('--card-active', active.toFixed(3));
+        // depth: -1 at back, +1 at front — used to tint z-index and pointer-events
+        card.style.setProperty('--card-depth', cos.toFixed(3));
+        // hide interactive back-facing cards from tab order / clicks
+        (card as HTMLElement).style.pointerEvents = cos < -0.1 ? 'none' : '';
       });
     };
 
@@ -76,14 +83,10 @@ export function initCircularScroll() {
         progress = 1;
       }
       progress = Math.max(0, Math.min(1, progress));
-      // Rotate from +arcSpan/2+overshoot to -arcSpan/2-overshoot
-      const rot = (arcSpan / 2 + overshoot) - progress * totalSweep;
+      // From +sweep/2 to -sweep/2 as we scroll through
+      const rot = sweep / 2 - progress * sweep;
       applyRotation(rot);
     };
-
-    // CSS var for radius so styles can key off it
-    wheel.style.setProperty('--radius', `${radius}px`);
-    section.style.setProperty('--radius', `${radius}px`);
 
     update();
 
