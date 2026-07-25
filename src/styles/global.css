@@ -187,6 +187,9 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   top: 0;
   left: 0;
   width: min(78vw, 320px);
+  height: min(64vh, 440px);
+  display: flex;
+  flex-direction: column;
   transform-style: preserve-3d;
   transform:
     rotateY(var(--base-angle, 0deg))
@@ -199,7 +202,11 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   transition: opacity 0.5s ease;
   will-change: transform, opacity;
 }
-[data-circular-card].is-featured { width: min(80vw, 360px); }
+[data-circular-card].is-featured {
+  width: min(80vw, 360px);
+  height: min(66vh, 460px);
+}
+[data-circular-card] > * { min-height: 0; } /* let flex children shrink */
 
 /* Center hint (subtle gradient anchor for the wheel) */
 [data-circular-scroll]::before {
