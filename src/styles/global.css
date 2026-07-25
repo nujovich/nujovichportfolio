@@ -186,8 +186,10 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   position: absolute;
   top: 0;
   left: 0;
-  width: min(78vw, 320px);
-  height: min(64vh, 440px);
+  /* Every card gets the SAME width and height — this is what keeps them from
+     staggering on the ring. Featured cards get no size override. */
+  width: 320px;
+  height: 420px;
   display: flex;
   flex-direction: column;
   transform-style: preserve-3d;
@@ -201,10 +203,6 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   z-index: calc(100 + (var(--card-depth, 0) * 100));
   transition: opacity 0.5s ease;
   will-change: transform, opacity;
-}
-[data-circular-card].is-featured {
-  width: min(80vw, 360px);
-  height: min(66vh, 460px);
 }
 [data-circular-card] > * { min-height: 0; } /* let flex children shrink */
 
