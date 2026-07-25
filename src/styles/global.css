@@ -91,32 +91,53 @@ html.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   will-change: transform;
 }
 
-/* Custom cursor */
+/* Custom arrow cursor */
+html, body,
+a, button, [role="button"], [data-cursor-hover] { cursor: none; }
+
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 9999;
-  transition:
-    width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.25s ease,
-    opacity 0.2s ease;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  transition: opacity 0.2s ease;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.custom-cursor__arrow {
+  transform-origin: 4px 4px;
+  transition: transform 0.05s linear, scale 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
-.custom-cursor.is-hover {
-  width: 56px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.55);
+.custom-cursor.is-hover .custom-cursor__arrow { scale: 1.35; color: #a78bfa; }
+.custom-cursor__label {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0b1c4d;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.custom-cursor.has-label .custom-cursor__label {
+  opacity: 1;
+  transform: translateX(0);
 }
 .custom-cursor.is-hidden { opacity: 0; }
-@media (pointer: coarse) { .custom-cursor { display: none; } }
+@media (pointer: coarse) {
+  .custom-cursor { display: none; }
+  html, body, a, button, [role="button"], [data-cursor-hover] { cursor: auto; }
+}
 
 /* Magnetic elements: script drives translate3d; we set the transition for the return-to-rest */
 [data-magnetic] {
@@ -134,20 +155,78 @@ html.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   display: block;
 }
 
-/* Horizontal-scroll pin: mobile fallback */
-[data-horizontal-scroll].is-mobile-fallback [data-horizontal-pin] {
+/* Circular (ferris-wheel) scroll */
+[data-circular-scroll] {
+  position: relative;
+}
+/* Wheel is a 0x0 point positioned below the visible pin.
+   Its coordinate system is what all cards rotate/translate against. */
+[data-circular-wheel] {
+  position: absolute;
+  top: calc(28vh + var(--radius, 1400px));
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--wheel-rot, 0deg));
+  transform-origin: 0 0;
+  will-change: transform;
+}
+[data-circular-card] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(84vw, 340px);
+  transform-origin: 0 0;
+  transform:
+    rotate(var(--base-angle, 0deg))
+    translateY(calc(var(--radius, 1400px) * -1))
+    translate(-50%, -50%);
+  opacity: calc(0.35 + 0.65 * var(--card-active, 0));
+  filter: blur(calc((1 - var(--card-active, 0)) * 1.5px));
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  will-change: transform, opacity;
+}
+[data-circular-card].is-featured { width: min(86vw, 420px); }
+
+/* Center hint (subtle gradient anchor for the wheel) */
+[data-circular-scroll]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 40% at 50% 30%,
+    rgba(107, 156, 255, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mobile fallback: linear stack, no wheel */
+[data-circular-scroll].is-mobile-fallback {
+  height: auto !important;
+}
+[data-circular-scroll].is-mobile-fallback [data-circular-pin] {
   position: static;
   height: auto;
   overflow: visible;
 }
-[data-horizontal-scroll].is-mobile-fallback [data-horizontal-track] {
-  transform: none !important;
+[data-circular-scroll].is-mobile-fallback [data-circular-wheel] {
+  position: static;
+  transform: none;
+  display: flex;
   flex-direction: column;
-  width: 100% !important;
+  gap: 1.5rem;
+  padding: 2rem 1rem 4rem;
 }
-[data-horizontal-scroll].is-mobile-fallback [data-horizontal-track] > * {
-  width: 100% !important;
-  min-width: 0 !important;
+[data-circular-scroll].is-mobile-fallback [data-circular-card] {
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  opacity: 1;
+  filter: none;
 }
 
 .gradient-text {

@@ -6,6 +6,7 @@ const videos = [
     description: '',
     event: '',
     tag: '',
+    featured: true,
   },
   {
     id: 'igHnQ52lGrg',
@@ -49,7 +50,7 @@ const videos = [
   },
   {
     id: 'hQdEi54-pvw',
-    title: "Meetup 2024: Chicas en comunidades tech",
+    title: 'Meetup 2024: Chicas en comunidades tech',
     description:
       'Meetup de Mermelada Tech en 2024, con debate y reflexiones sobre la participación de mujeres en comunidades tecnológicas.',
     event: 'Mermelada Tech Meetup',
@@ -58,93 +59,73 @@ const videos = [
 ];
 ---
 
-<section id="videos" class="py-32 px-6 bg-slate-900/50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-16" data-reveal>
-      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">YouTube</p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white">
+<section
+  id="videos"
+  class="relative bg-slate-900/50"
+  data-circular-scroll
+  data-arc-span="80"
+  data-arc-radius="1550"
+  data-arc-overshoot="30"
+>
+  <div
+    data-circular-pin
+    class="sticky top-0 h-screen overflow-hidden flex flex-col"
+  >
+    <div class="relative z-10 text-center pt-16 md:pt-20 px-6">
+      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3" data-reveal>
+        YouTube
+      </p>
+      <h2 class="text-4xl md:text-5xl font-extrabold text-white" data-reveal style="--reveal-delay: 80ms">
         Charlas & <span class="gradient-text">Videos</span>
       </h2>
-      <p class="text-slate-400 mt-4 max-w-xl mx-auto">
-        Mis apariciones en conferencias, comunidades y canales de tecnología.
+      <p class="text-slate-500 mt-3 text-sm hidden md:block" data-reveal style="--reveal-delay: 160ms">
+        Mis apariciones — hacé scroll para navegar el carrusel ↻
       </p>
     </div>
 
-    <!-- Featured video -->
-    <div class="mb-10 glass rounded-2xl overflow-hidden card-hover spotlight" data-reveal>
-      <div class="aspect-video w-full">
-        <button
-          class="yt-facade relative w-full h-full cursor-pointer group block"
-          data-id={videos[0].id}
-          data-title={videos[0].title}
-          aria-label={`Reproducir: ${videos[0].title}`}
-        >
-          <img
-            src={`https://img.youtube.com/vi/${videos[0].id}/hqdefault.jpg`}
-            alt=""
-            width="480"
-            height="360"
-            loading="eager"
-            decoding="async"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <svg class="w-8 h-8 text-white ml-1.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
+    <div data-circular-wheel>
+      {
+        videos.map(({ id, title, description, tag, featured }) => (
+          <div
+            data-circular-card
+            class={`glass rounded-2xl overflow-hidden card-hover spotlight group ${featured ? "is-featured" : ""}`}
+          >
+            <div class="aspect-video w-full">
+              <button
+                class="yt-facade relative w-full h-full block group"
+                data-id={id}
+                data-title={title}
+                data-cursor-label="Play"
+                aria-label={`Reproducir: ${title}`}
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                  alt=""
+                  width="480"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                  <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+              </button>
+            </div>
+            <div class="p-4">
+              {tag && <span class="text-[10px] text-slate-500 block mb-1">{tag}</span>}
+              <h3 class="text-sm md:text-base font-bold text-white mb-1 line-clamp-2">{title}</h3>
+              {description && (
+                <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{description}</p>
+              )}
             </div>
           </div>
-        </button>
-      </div>
-      <div class="p-6">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
-            Destacado
-          </span>
-          {videos[0].tag && <span class="text-xs text-slate-500">{videos[0].tag}</span>}
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">{videos[0].title}</h3>
-        {videos[0].description && <p class="text-slate-400 text-sm">{videos[0].description}</p>}
-      </div>
-    </div>
-
-    <!-- Grid of other videos -->
-    <div class="grid md:grid-cols-2 gap-6">
-      {videos.slice(1).map(({ id, title, description, tag }, idx) => (
-        <div class="glass rounded-2xl overflow-hidden card-hover spotlight" data-reveal style={`--reveal-delay: ${idx * 80}ms`}>
-          <div class="aspect-video w-full">
-            <button
-              class="yt-facade relative w-full h-full cursor-pointer group block"
-              data-id={id}
-              data-title={title}
-              aria-label={`Reproducir: ${title}`}
-            >
-              <img
-                src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-                alt=""
-                width="480"
-                height="360"
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-                <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <svg class="w-5 h-5 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
-              </div>
-            </button>
-          </div>
-          <div class="p-5">
-            {tag && <span class="text-xs text-slate-500 block mb-2">{tag}</span>}
-            <h3 class="text-base font-bold text-white mb-2">{title}</h3>
-            {description && <p class="text-slate-400 text-sm leading-relaxed">{description}</p>}
-          </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </div>
 </section>
