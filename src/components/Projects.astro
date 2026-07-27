@@ -6,7 +6,7 @@ const projects = [
   {
     title: "Mermelada Tech",
     description:
-      "Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Organizo meetups, workshops y charlas para impulsar la diversidad en el sector.",
+      "Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Meetups, workshops y charlas.",
     tags: ["Comunidad", "Tech", "Inclusión"],
     logo: mermeladaLogo,
     url: "https://linktr.ee/mermeladatech",
@@ -15,7 +15,7 @@ const projects = [
   {
     title: "Awake",
     description:
-      "Diseño y desarrollo de la web de Awake, una agencia de marketing digital en Alicante. Una presencia online moderna y cuidada para impulsar su crecimiento.",
+      "Diseño y desarrollo de la web de Awake, agencia de marketing digital en Alicante.",
     tags: ["Web", "Marketing", "Alicante"],
     logoUrl: "/awake-logo.svg",
     url: "https://www.awakemarketing.es/",
@@ -24,7 +24,7 @@ const projects = [
   {
     title: "Mint",
     description:
-      "Herramienta de desarrollo open source para auditar CSS. Cuenta con playground web y CLI, actualmente en pre-release y en construcción activa.",
+      "Herramienta open source para auditar CSS. Playground web + CLI, en construcción activa.",
     tags: ["CSS", "DevTool", "Open Source"],
     icon: "🌱",
     url: "https://github.com/nujovich/mint",
@@ -34,7 +34,7 @@ const projects = [
   {
     title: "WTM GDG Madrid",
     description:
-      "Contribuyo al desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como parte de mi rol como Ambassador desde 2023.",
+      "Desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como Ambassador desde 2023.",
     tags: ["WTM", "GDG", "Open Source"],
     logoUrl: "/wtm-madrid-logo.png",
     url: "https://wtmgdgmadrid.github.io/",
@@ -43,8 +43,8 @@ const projects = [
   {
     title: "Seguridad Web",
     description:
-      "Charlas y talleres sobre OWASP Top 10, buenas prácticas de seguridad web y cómo proteger aplicaciones modernas ante las amenazas más comunes.",
-    tags: ["Seguridad", "OWASP", "Web"],
+      "Charlas y talleres sobre OWASP Top 10 y buenas prácticas de seguridad en aplicaciones modernas.",
+    tags: ["Seguridad", "OWASP"],
     icon: "🔐",
     url: "#videos",
     featured: false,
@@ -52,90 +52,79 @@ const projects = [
   {
     title: "Commit Conf 2024",
     description:
-      "Participación como speaker en una de las conferencias de desarrollo de software más importantes de España, con ponencias sobre tecnología moderna.",
-    tags: ["Speaker", "Conferencia", "España"],
+      "Speaker en una de las conferencias de desarrollo de software más importantes de España.",
+    tags: ["Speaker", "Conferencia"],
     icon: "🎤",
     url: "#videos",
     featured: false,
   },
 ];
+
+// Per-project post-it visual randomness (deterministic per index)
+const styles = [
+  { color: "yellow",   rot: -4, tx:  -6, ty:   0 },
+  { color: "pink",     rot:  3, tx:  10, ty:  24 },
+  { color: "blue",     rot: -2, tx:  -8, ty: -14 },
+  { color: "mint",     rot:  5, tx:  14, ty:  30 },
+  { color: "peach",    rot: -3, tx:  -4, ty:   6 },
+  { color: "lavender", rot:  4, tx:   8, ty: -18 },
+];
 ---
 
 <section
   id="projects"
-  class="relative bg-slate-950"
-  data-circular-scroll
-  data-arc-span="360"
-  data-arc-radius="640"
-  data-arc-sweep="540"
+  class="relative py-24 md:py-32 px-6 bg-slate-950 overflow-hidden"
 >
-  <div
-    data-circular-pin
-    class="sticky top-0 h-screen overflow-hidden flex flex-col"
-  >
-    <!-- Header floats on top of the wheel -->
-    <div class="relative z-10 text-center pt-16 md:pt-20 px-6">
-      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3" data-reveal>
+  <!-- Corkboard background -->
+  <div class="corkboard" aria-hidden="true"></div>
+
+  <div class="relative max-w-6xl mx-auto">
+    <div class="text-center mb-20" data-reveal>
+      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
         Proyectos & Charlas
       </p>
       <h2 class="text-4xl md:text-5xl font-extrabold text-white" data-reveal style="--reveal-delay: 80ms">
         Lo que he <span class="gradient-text">construido</span>
       </h2>
-      <p class="text-slate-500 mt-3 text-sm hidden md:block" data-reveal style="--reveal-delay: 160ms">
-        Scrolleá para pasar las cards ↓
-      </p>
     </div>
 
-    <!-- Wheel -->
-    <div data-circular-wheel>
+    <div class="postit-grid">
       {
         projects.map(
-          ({ title, description, tags, icon, logo, logoUrl, url, featured, inProgress }) => (
-            <a
-              href={url}
-              target={url.startsWith("http") ? "_blank" : undefined}
-              rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
-              data-circular-card
-              data-cursor-label={url.startsWith("http") ? "Ver" : "Ir"}
-              class={`glass rounded-2xl p-6 md:p-7 card-hover spotlight group flex flex-col ${featured ? "bg-gradient-to-br from-brand-900/30 to-accent-600/10 is-featured" : ""}`}
-            >
-              <div class="flex items-start justify-between mb-4">
-                {logo ? (
-                  <Image src={logo} alt={title} height={60} width={60} class="h-14 w-auto object-contain" loading="lazy" />
-                ) : logoUrl ? (
-                  <img src={logoUrl} alt={title} class="h-14 w-auto object-contain" loading="lazy" />
-                ) : (
-                  <span class="text-4xl" aria-hidden="true">{icon}</span>
-                )}
-                <div class="flex flex-col items-end gap-2">
-                  {featured && (
-                    <span class="text-[10px] font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-2.5 py-0.5">
-                      Destacado
-                    </span>
+          ({ title, description, tags, icon, logo, logoUrl, url, featured, inProgress }, i) => {
+            const s = styles[i % styles.length];
+            return (
+              <a
+                href={url}
+                target={url.startsWith("http") ? "_blank" : undefined}
+                rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
+                class={`postit postit--${s.color}`}
+                data-cursor-label={url.startsWith("http") ? "Ver" : "Ir"}
+                data-reveal
+                style={`--rot: ${s.rot}deg; --tx: ${s.tx}px; --ty: ${s.ty}px; --reveal-delay: ${i * 90}ms;`}
+              >
+                <span class="postit__tape" aria-hidden="true"></span>
+                <div class="postit__head">
+                  {logo ? (
+                    <Image src={logo} alt={title} height={56} width={56} class="postit__logo" loading="lazy" />
+                  ) : logoUrl ? (
+                    <img src={logoUrl} alt={title} class="postit__logo" loading="lazy" />
+                  ) : (
+                    <span class="postit__icon" aria-hidden="true">{icon}</span>
                   )}
-                  {inProgress && (
-                    <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-2.5 py-0.5 inline-flex items-center gap-1.5">
-                      <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      En curso
-                    </span>
-                  )}
+                  <div class="postit__badges">
+                    {featured   && <span class="postit__badge postit__badge--featured">★ Destacado</span>}
+                    {inProgress && <span class="postit__badge postit__badge--progress">● En curso</span>}
+                  </div>
                 </div>
-              </div>
-              <h3 class="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-brand-400 transition-colors">
-                {title}
-              </h3>
-              <p class="text-slate-400 leading-relaxed text-sm line-clamp-5 flex-1">
-                {description}
-              </p>
-              <div class="flex flex-wrap gap-1.5 mt-4">
-                {tags.map((tag) => (
-                  <span class="text-[10px] font-medium px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-slate-300">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </a>
-          ),
+                <h3 class="postit__title">{title}</h3>
+                <p class="postit__desc">{description}</p>
+                <div class="postit__tags">
+                  {tags.map((tag) => <span class="postit__tag">#{tag}</span>)}
+                </div>
+              </a>
+            );
+          },
         )
       }
     </div>
