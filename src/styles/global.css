@@ -91,9 +91,9 @@ html.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   will-change: transform;
 }
 
-/* Custom arrow cursor */
-html, body,
-a, button, [role="button"], [data-cursor-hover] { cursor: none; }
+/* Custom arrow cursor — hide the OS cursor on every element while it's active */
+html, body { cursor: none; }
+body * { cursor: none; }
 
 .custom-cursor {
   position: fixed;
@@ -136,7 +136,7 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
 .custom-cursor.is-hidden { opacity: 0; }
 @media (pointer: coarse) {
   .custom-cursor { display: none; }
-  html, body, a, button, [role="button"], [data-cursor-hover] { cursor: auto; }
+  html, body, body * { cursor: auto; }
 }
 
 /* Magnetic elements: script drives translate3d; we set the transition for the return-to-rest */
@@ -190,7 +190,6 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
   color: #1a1a1a;
   text-decoration: none;
   text-align: left;
-  cursor: pointer;
   border: 0;
   font-family: 'Kalam', 'Caveat', 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', system-ui, cursive;
   transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
