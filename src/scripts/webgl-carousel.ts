@@ -36,11 +36,10 @@ const fragment = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vec4 tex = texture2D(tMap, vUv);
-    // Fade cards behind the ring so they still peek through
-    float a = tex.a * mix(0.28, 1.0, clamp(uActive, 0.0, 1.0));
-    vec3 col = tex.rgb * mix(0.55, 1.0, clamp(uActive, 0.0, 1.0));
-    col += vec3(0.06, 0.09, 0.16) * uHover * uActive;
-    gl_FragColor = vec4(col, a);
+    float a = clamp(uActive, 0.0, 1.0);
+    vec3 col = tex.rgb * mix(0.72, 1.0, a);
+    col += vec3(0.06, 0.09, 0.16) * uHover;
+    gl_FragColor = vec4(col, tex.a * a);
   }
 `;
 
@@ -361,9 +360,8 @@ function initSection(section: HTMLElement) {
     camera.position.set(0, 0, 5);
     const scene = new Transform();
 
-    const CARD_W = 1.4;
+    const CARD_W = 1.65;
     const CARD_H = CARD_W * TEX_ASPECT;
-    const RADIUS = 2.6;
 
     const items = cards.map((data, i) => {
       const tex = document.createElement('canvas');
@@ -391,11 +389,8 @@ function initSection(section: HTMLElement) {
         cullFace: null,
       });
       const mesh = new Mesh(gl, { geometry, program });
-      const baseAngle = (i / cards.length) * Math.PI * 2 - Math.PI;
-      mesh.position.set(Math.sin(baseAngle) * RADIUS, 0, Math.cos(baseAngle) * RADIUS);
-      mesh.rotation.y = baseAngle;
       mesh.setParent(scene);
-      return { mesh, baseAngle, data, hover: 0, hoverTarget: 0 };
+      return { mesh, index: i, data, hover: 0, hoverTarget: 0 };
     });
 
     function resize() {
@@ -413,19 +408,12 @@ function initSection(section: HTMLElement) {
     requestAnimationFrame(resize);
     window.addEventListener('resize', resize);
 
-    const sweep = (Number(section.dataset.arcSweep ?? '540')) * Math.PI / 180;
-
     let running = true;
     let hoveredIdx = -1;
+    let currentIdx = 0; // card whose `t` (stage - i) is closest to 0
 
     function pickIdx(): number {
-      let bestI = -1;
-      let bestA = 0.6;
-      items.forEach((it, i) => {
-        const a = (it.mesh.program.uniforms.uActive as any).value as number;
-        if (a > bestA) { bestA = a; bestI = i; }
-      });
-      return bestI;
+      return currentIdx;
     }
 
     canvas.addEventListener('pointermove', () => {
@@ -447,6 +435,11 @@ function initSection(section: HTMLElement) {
       else                        window.location.href = d.href;
     });
 
+    function smoothstep(a: number, b: number, x: number) {
+      const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    }
+
     function frame() {
       if (!running) return;
       const rect = section.getBoundingClientRect();
@@ -455,23 +448,66 @@ function initSection(section: HTMLElement) {
       if (rect.top < 0 && runway > 0) progress = -rect.top / runway;
       if (rect.top < -runway) progress = 1;
       progress = Math.max(0, Math.min(1, progress));
-      const rot = -sweep / 2 + progress * sweep;
-      scene.rotation.y = rot;
 
+      const N = items.length;
+      // Stage moves linearly from -0.15 to N-1+0.15, so the first card lands
+      // near the top of the section and the last one still lingers at the end.
+      const stage = -0.15 + progress * (N - 1 + 0.3);
+
+      let closest = 0;
+      let closestT = Infinity;
       let anyHover = false;
-      items.forEach((it) => {
-        const eff = it.baseAngle + rot;
-        const norm = Math.atan2(Math.sin(eff), Math.cos(eff));
-        const active = Math.max(0, Math.cos(norm));
-        (it.mesh.program.uniforms.uActive as any).value = active;
+
+      items.forEach((it, i) => {
+        const t = stage - i; // <0 behind, 0 current, >0 exited
+        if (Math.abs(t) < closestT) { closestT = Math.abs(t); closest = i; }
+
+        let x = 0, y = 0, z = 0;
+        let rotZ = 0, rotY = 0;
+        let scale = 1;
+        let uA = 0;
+
+        if (t <= 0) {
+          // Behind or current — stacked, peeking from below current
+          const d = -t;
+          x = 0;
+          y = -d * 0.09;                          // slight offset (deck peek)
+          z = -d * 0.55;                          // push back in depth
+          rotZ = -d * 0.025;                      // small tilt
+          scale = 1 - d * 0.06;
+          // full opacity for the closest ~1.5 cards, fade the rest
+          if (d < 1.5)      uA = 1 - d * 0.08;
+          else              uA = Math.max(0, 1 - (d - 1.5) / 2);
+        } else {
+          // Exiting — fly up-and-right, tilt, fade
+          const e = smoothstep(0, 1, t);
+          x = e * 1.2;
+          y = e * 2.2;
+          z = e * 1.1;
+          rotZ = -e * 0.42;
+          rotY = e * 0.18;
+          scale = 1 - e * 0.15;
+          uA = Math.max(0, 1 - t * 1.35);
+        }
+
+        // Apply hover: only the current card responds
         it.hover += (it.hoverTarget - it.hover) * 0.15;
-        (it.mesh.program.uniforms.uHover as any).value = it.hover;
-        const scale = 1 + it.hover * 0.06;
-        it.mesh.scale.set(scale, scale, scale);
+        if (Math.abs(t) < 0.35) {
+          scale += it.hover * 0.05;
+        }
         if (it.hover > 0.5) anyHover = true;
+
+        it.mesh.position.set(x, y, z);
+        it.mesh.rotation.z = rotZ;
+        it.mesh.rotation.y = rotY;
+        it.mesh.scale.set(scale, scale, scale);
+        (it.mesh.program.uniforms.uActive as any).value = uA;
+        (it.mesh.program.uniforms.uHover as any).value  = it.hover;
       });
 
-      // Sort back-to-front for proper alpha compositing
+      currentIdx = closest;
+
+      // Back-to-front for correct alpha blending
       scene.children.sort((a: any, b: any) => a.position.z - b.position.z);
 
       canvas.style.cursor = anyHover ? 'pointer' : '';
