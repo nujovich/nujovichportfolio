@@ -187,15 +187,16 @@ body * { cursor: none; }
   flex-direction: column;
   padding: 22px 22px 20px;
   min-height: 260px;
-  color: #1a1a1a;
+  color: #14130F; /* Tinta */
   text-decoration: none;
   text-align: left;
   border: 0;
   font-family: 'Kalam', 'Caveat', 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', system-ui, cursive;
   transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+  /* Warmer, more paper-like drop shadow */
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.14),
-    0 12px 24px rgba(0, 0, 0, 0.35);
+    0 2px 4px rgba(20, 19, 15, 0.14),
+    0 14px 26px rgba(20, 19, 15, 0.30);
   transition:
     transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -205,8 +206,8 @@ body * { cursor: none; }
 .postit:focus-visible {
   transform: translate(var(--tx), calc(var(--ty) - 8px)) rotate(calc(var(--rot) * 0.35)) scale(1.03);
   box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.18),
-    0 24px 40px rgba(0, 0, 0, 0.5);
+    0 4px 6px rgba(20, 19, 15, 0.20),
+    0 26px 44px rgba(20, 19, 15, 0.42);
   z-index: 10;
   outline: none;
 }
@@ -219,7 +220,7 @@ body * { cursor: none; }
 [data-reveal].postit           { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 40px)) rotate(var(--rot)); }
 [data-reveal].postit.is-visible { opacity: 1; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
 
-/* Paper tape at the top-center */
+/* Paper tape at the top-center — warm off-white to match the Tinta paper */
 .postit__tape {
   position: absolute;
   top: -12px;
@@ -227,20 +228,21 @@ body * { cursor: none; }
   transform: translateX(-50%) rotate(-4deg);
   width: 84px;
   height: 22px;
-  background: rgba(255, 255, 255, 0.55);
-  border-left:  1px dashed rgba(0, 0, 0, 0.08);
-  border-right: 1px dashed rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(251, 250, 248, 0.65); /* Papel */
+  border-left:  1px dashed rgba(20, 19, 15, 0.10);
+  border-right: 1px dashed rgba(20, 19, 15, 0.10);
+  box-shadow: 0 1px 3px rgba(20, 19, 15, 0.10);
   pointer-events: none;
 }
 
-/* Color variants — subtle gradient so paper looks less flat */
-.postit--yellow   { background: linear-gradient(150deg, #fff2a8 0%, #ffd966 100%); }
-.postit--pink     { background: linear-gradient(150deg, #ffd0dd 0%, #f9a8bf 100%); }
-.postit--blue     { background: linear-gradient(150deg, #cde3f9 0%, #a5c9f2 100%); }
-.postit--mint     { background: linear-gradient(150deg, #cff5d3 0%, #98e6a4 100%); }
-.postit--peach    { background: linear-gradient(150deg, #ffd6b7 0%, #ffb08a 100%); }
-.postit--lavender { background: linear-gradient(150deg, #e6d3fb 0%, #c5a6f0 100%); }
+/* Color variants — Marca Tinta palette: warm cream, sand, and muted tints
+   built off Papel #FBFAF8 and Arena #C9C2B6. No saturated pastels. */
+.postit--yellow   { background: linear-gradient(150deg, #F5ECC8 0%, #E6D89A 100%); } /* Ocre */
+.postit--pink     { background: linear-gradient(150deg, #EFDCD4 0%, #DDBBB0 100%); } /* Rosa polvo */
+.postit--blue     { background: linear-gradient(150deg, #DEE1E5 0%, #BEC4CB 100%); } /* Piedra fría */
+.postit--mint     { background: linear-gradient(150deg, #DCE3D6 0%, #BBC7AE 100%); } /* Salvia */
+.postit--peach    { background: linear-gradient(150deg, #F0DAC6 0%, #DDB79A 100%); } /* Terracota */
+.postit--lavender { background: linear-gradient(150deg, #E1DEE7 0%, #C1BBD0 100%); } /* Lila apagado */
 
 .postit__head    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
 .postit__logo    { height: 44px; width: auto; object-fit: contain; }
@@ -254,11 +256,11 @@ body * { cursor: none; }
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.7);
+  background: rgba(20, 19, 15, 0.08);
+  color: rgba(20, 19, 15, 0.7);
 }
-.postit__badge--featured { background: rgba(0, 0, 0, 0.75); color: #fff; }
-.postit__badge--progress { background: rgba(16, 122, 60, 0.85); color: #fff; }
+.postit__badge--featured { background: #14130F; color: #FBFAF8; }        /* Tinta on Papel */
+.postit__badge--progress { background: rgba(74, 70, 63, 0.9); color: #FBFAF8; } /* Grafito */
 
 .postit__title {
   font-family: 'Kalam', 'Caveat', cursive, system-ui;
@@ -266,14 +268,14 @@ body * { cursor: none; }
   font-size: 1.6rem;
   line-height: 1.1;
   margin: 4px 0 8px;
-  color: #111;
+  color: #14130F; /* Tinta */
 }
 .postit__title--sm { font-size: 1.15rem; margin-top: 10px; }
 .postit__desc {
   font-family: 'Kalam', 'Caveat', cursive, system-ui;
   font-size: 0.95rem;
   line-height: 1.3;
-  color: rgba(0, 0, 0, 0.72);
+  color: rgba(74, 70, 63, 0.92); /* Grafito */
   flex: 1;
 }
 .postit__tags {
@@ -286,12 +288,12 @@ body * { cursor: none; }
 .postit__tag {
   font-size: 11px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.55);
-  background: rgba(0, 0, 0, 0.06);
+  color: rgba(74, 70, 63, 0.75);           /* Grafito */
+  background: rgba(20, 19, 15, 0.06);      /* Tinta wash */
   padding: 2px 8px;
   border-radius: 999px;
 }
-.postit__tag--dark { background: rgba(0, 0, 0, 0.15); color: rgba(0, 0, 0, 0.8); }
+.postit__tag--dark { background: rgba(20, 19, 15, 0.16); color: rgba(20, 19, 15, 0.82); }
 
 /* Video-flavored post-it */
 .postit--video { padding: 14px 14px 18px; min-height: 260px; }
