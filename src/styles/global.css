@@ -182,7 +182,10 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
    base angle, then translate outward by the radius. `translate(-50%, -50%)`
    applies first (in the card's own frame) so the card is centered on the
    point it ends up at. */
-[data-circular-card] {
+/* Doubled attribute selector to raise specificity above sibling classes like
+   `.spotlight { position: relative }` that Tailwind emits later in the output
+   bundle. */
+[data-circular-card][data-circular-card] {
   position: absolute;
   top: 0;
   left: 0;
