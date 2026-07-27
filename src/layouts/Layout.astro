@@ -157,7 +157,7 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
 
     <footer class="tinta-footer">
       <div class="max-w-[1080px] mx-auto px-6 py-10 flex flex-wrap items-baseline justify-between gap-4">
-        <span class="tinta-mono tinta-mono--muted">© {new Date().getFullYear()} · Nadia Ujovich · Madrid</span>
+        <span class="tinta-mono tinta-mono--muted">© {new Date().getFullYear()} · Nadia Ujovich</span>
         <span class="tinta-mono tinta-mono--muted">nadiaujovich.dev</span>
       </div>
     </footer>
@@ -167,13 +167,19 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
     </script>
     <script>
       const navbar = document.getElementById('navbar');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 60) {
-          navbar?.classList.add('is-scrolled');
-        } else {
-          navbar?.classList.remove('is-scrolled');
-        }
-      });
+      const hero   = document.getElementById('hero');
+      const updateNavMode = () => {
+        if (!navbar) return;
+        // The nav sits over the Ink hero at the top and inverts once its
+        // bottom edge crosses out of the hero into a Papel section.
+        const navBottom = navbar.getBoundingClientRect().bottom;
+        const heroBottom = hero ? hero.getBoundingClientRect().bottom : -Infinity;
+        const onPaper = navBottom > heroBottom - 8;
+        navbar.classList.toggle('is-on-paper', onPaper);
+      };
+      updateNavMode();
+      window.addEventListener('scroll', updateNavMode, { passive: true });
+      window.addEventListener('resize', updateNavMode);
 
       const toggle = document.getElementById('menu-toggle');
       const menu   = document.getElementById('mobile-menu');
