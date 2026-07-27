@@ -69,24 +69,24 @@ const fragment = /* glsl */ `
     float n1 = fbm(p * 1.2 + vec2(t, -t * 0.7));
     float n2 = fbm(p * 2.0 + vec2(-t * 0.5, t * 0.9) + n1);
 
-    // Brand palette-ish gradients
-    vec3 c1 = vec3(0.043, 0.110, 0.302); // brand-900 #0b1c4d
-    vec3 c2 = vec3(0.231, 0.447, 0.961); // brand-500 #3b72f5
-    vec3 c3 = vec3(0.655, 0.545, 0.980); // accent-400 #a78bfa
+    // Marca Tinta palette — Tinta -> Grafito with subtle warm highlights
+    vec3 c1 = vec3(0.078, 0.075, 0.059); // Tinta   #14130F
+    vec3 c2 = vec3(0.290, 0.275, 0.247); // Grafito #4A463F
+    vec3 c3 = vec3(0.788, 0.760, 0.714); // Arena   #C9C2B6
 
     vec3 col = mix(c1, c2, smoothstep(-0.6, 0.9, n1));
-    col      = mix(col, c3, smoothstep(0.0, 0.9, n2) * 0.55);
+    col      = mix(col, c3, smoothstep(0.4, 0.95, n2) * 0.28);
 
-    // Mouse highlight
-    col += vec3(0.15, 0.20, 0.35) * m * 0.6;
+    // Cursor warm highlight — very subtle so it never breaks the ink mood
+    col += vec3(0.25, 0.22, 0.16) * m * 0.35;
 
-    // Vignette
+    // Vignette pulls attention to the type
     float vig = smoothstep(1.2, 0.2, length((uv - 0.5) * vec2(1.4, 1.0)));
     col *= 0.55 + vig * 0.45;
 
-    // Subtle grain
+    // Paper grain
     float grain = fract(sin(dot(uv * uResolution, vec2(12.9898, 78.233))) * 43758.5453);
-    col += (grain - 0.5) * 0.025;
+    col += (grain - 0.5) * 0.03;
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -102,7 +102,7 @@ export function initHeroWebGL(canvas: HTMLCanvasElement) {
     antialias: false,
   });
   const gl = renderer.gl;
-  gl.clearColor(0.043, 0.110, 0.302, 1);
+  gl.clearColor(0.078, 0.075, 0.059, 1); // Tinta
 
   const geometry = new Triangle(gl);
 

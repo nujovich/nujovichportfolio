@@ -22,19 +22,20 @@ const styles = [
 
 <section
   id="videos"
-  class="relative py-24 md:py-32 px-6 bg-slate-900/60 overflow-hidden"
+  class="tinta-section tinta-videos"
 >
   <div class="corkboard" aria-hidden="true"></div>
 
-  <div class="relative max-w-6xl mx-auto">
-    <div class="text-center mb-20" data-reveal>
-      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">YouTube</p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white" data-reveal style="--reveal-delay: 80ms">
-        Charlas & <span class="gradient-text">Videos</span>
-      </h2>
-    </div>
+  <div class="tinta-section__header">
+    <span class="tinta-section-num">04</span>
+    <h2 class="tinta-h2" data-reveal>Charlas & Videos</h2>
+  </div>
 
-    <div class="postit-grid">
+  <p class="tinta-lede" data-reveal style="--reveal-delay: 80ms">
+    Mis apariciones en conferencias, comunidades y canales.
+  </p>
+
+  <div class="postit-grid">
       {
         videos.map(({ id, title, tag, featured }, i) => {
           const s = styles[i % styles.length];
@@ -69,7 +70,6 @@ const styles = [
           );
         })
       }
-    </div>
   </div>
 </section>
 

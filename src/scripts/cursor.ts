@@ -32,6 +32,11 @@ export function initCursor() {
   const onMove = (e: PointerEvent) => {
     target.x = e.clientX;
     target.y = e.clientY;
+    // Toggle "on-ink" state when the pointer is over a section flagged with
+    // [data-tinta-mode="ink"] so the cursor stays readable on dark spreads.
+    const under = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+    const onInk = !!under?.closest('[data-tinta-mode="ink"]');
+    cursor.classList.toggle('is-on-ink', onInk);
   };
   window.addEventListener('pointermove', onMove);
 

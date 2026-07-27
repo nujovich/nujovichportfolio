@@ -73,22 +73,22 @@ const styles = [
 
 <section
   id="projects"
-  class="relative py-24 md:py-32 px-6 bg-slate-950 overflow-hidden"
+  class="tinta-section tinta-projects"
 >
-  <!-- Corkboard background -->
+  <!-- Corkboard warm wash -->
   <div class="corkboard" aria-hidden="true"></div>
 
-  <div class="relative max-w-6xl mx-auto">
-    <div class="text-center mb-20" data-reveal>
-      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">
-        Proyectos & Charlas
-      </p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white" data-reveal style="--reveal-delay: 80ms">
-        Lo que he <span class="gradient-text">construido</span>
-      </h2>
-    </div>
+  <div class="tinta-section__header">
+    <span class="tinta-section-num">03</span>
+    <h2 class="tinta-h2" data-reveal>Proyectos & Charlas</h2>
+  </div>
 
-    <div class="postit-grid">
+  <p class="tinta-lede" data-reveal style="--reveal-delay: 80ms">
+    Un tablero de notas: cada papel, una cosa hecha o dicha.
+    Comunidad, herramientas, charlas.
+  </p>
+
+  <div class="postit-grid">
       {
         projects.map(
           ({ title, description, tags, icon, logo, logoUrl, url, featured, inProgress }, i) => {
@@ -127,6 +127,5 @@ const styles = [
           },
         )
       }
-    </div>
   </div>
 </section>
