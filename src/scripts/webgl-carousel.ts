@@ -1,0 +1,614 @@
+import { Renderer, Camera, Transform, Program, Mesh, Plane, Texture, Vec2 } from 'ogl';
+
+interface CardData {
+  title: string;
+  description: string;
+  tags: string[];
+  imageUrl?: string;
+  iconChar?: string;
+  href: string;
+  target: string;
+  featured: boolean;
+  badge?: string; // e.g. "Destacado" or "En curso"
+}
+
+const TEX_W = 512;
+const TEX_H = 672;
+const TEX_ASPECT = TEX_H / TEX_W;
+
+const vertex = /* glsl */ `
+  attribute vec3 position;
+  attribute vec2 uv;
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const fragment = /* glsl */ `
+  precision highp float;
+  uniform sampler2D tMap;
+  uniform float uActive;   // opacity multiplier (used for exiting cards only)
+  uniform float uHover;    // mouse hover state, 0-1
+  uniform float uFocus;    // 1 for the current (front) card, 0 otherwise
+  varying vec2 vUv;
+  void main() {
+    vec4 tex = texture2D(tMap, vUv);
+    float a = clamp(uActive, 0.0, 1.0);
+
+    // Glow on the border when the card is focused or hovered.
+    // Distance to the nearest edge, in UV space:
+    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+    float ring = smoothstep(0.03, 0.0, edge);              // 1 near border
+    float glow = smoothstep(0.10, 0.0, edge) * 0.5;        // soft outer glow
+    float highlight = clamp(uFocus + uHover * 0.6, 0.0, 1.0);
+
+    vec3 col = tex.rgb;
+    col += vec3(0.42, 0.58, 1.00) * (ring + glow) * highlight;
+
+    gl_FragColor = vec4(col, tex.a * a);
+  }
+`;
+
+/* Canvas helpers ------------------------------------------------------------ */
+
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, w: number, h: number, r: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function wrap(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number, y: number,
+  maxW: number, lineH: number, maxLines: number,
+): number {
+  const words = text.split(/\s+/);
+  let line = '';
+  let lineY = y;
+  let n = 0;
+  for (const w of words) {
+    const test = line ? `${line} ${w}` : w;
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line, x, lineY);
+      lineY += lineH;
+      n++;
+      if (n >= maxLines) return lineY;
+      line = w;
+    } else {
+      line = test;
+    }
+  }
+  if (line && n < maxLines) {
+    ctx.fillText(line, x, lineY);
+    lineY += lineH;
+  }
+  return lineY;
+}
+
+const imageCache = new Map<string, HTMLImageElement | 'error'>();
+
+function loadImage(url: string): Promise<HTMLImageElement | null> {
+  const cached = imageCache.get(url);
+  if (cached === 'error') return Promise.resolve(null);
+  if (cached) return Promise.resolve(cached);
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { imageCache.set(url, img); resolve(img); };
+    img.onerror = () => { imageCache.set(url, 'error'); resolve(null); };
+    img.src = url;
+  });
+}
+
+function drawCardTexture(canvas: HTMLCanvasElement, data: CardData) {
+  const ctx = canvas.getContext('2d')!;
+  const W = canvas.width  / 2; // logical size (DPR=2)
+  const H = canvas.height / 2;
+  ctx.setTransform(2, 0, 0, 2, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  // Background (glass style)
+  ctx.fillStyle = data.featured ? 'rgba(11, 28, 77, 0.55)' : 'rgba(255, 255, 255, 0.06)';
+  roundRect(ctx, 0, 0, W, H, 24);
+  ctx.fill();
+
+  if (data.featured) {
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, 'rgba(59, 114, 245, 0.20)');
+    g.addColorStop(1, 'rgba(124, 58, 237, 0.05)');
+    ctx.fillStyle = g;
+    roundRect(ctx, 0, 0, W, H, 24);
+    ctx.fill();
+  }
+
+  // Stronger border so the boundary of every card is unmistakable
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 1, 1, W - 2, H - 2, 24);
+  ctx.stroke();
+
+  const PAD = 32;
+
+  // Logo or icon top-left
+  if (data.imageUrl) {
+    const img = imageCache.get(data.imageUrl);
+    if (img && img !== 'error') {
+      const maxH = 56;
+      const s = maxH / img.height;
+      const w = img.width * s;
+      ctx.drawImage(img as HTMLImageElement, PAD, PAD, w, maxH);
+    }
+  } else if (data.iconChar) {
+    ctx.font = '48px system-ui, -apple-system, "Segoe UI"';
+    ctx.fillStyle = '#ffffff';
+    ctx.textBaseline = 'top';
+    ctx.fillText(data.iconChar, PAD, PAD - 2);
+  }
+
+  // Badge top-right
+  if (data.badge) {
+    const isProgress = data.badge.toLowerCase().includes('curso');
+    const label = data.badge;
+    ctx.font = '600 11px system-ui';
+    const tw = ctx.measureText(label).width;
+    const bw = tw + 20;
+    const bh = 22;
+    const bx = W - PAD - bw;
+    const by = PAD + 4;
+    ctx.fillStyle    = isProgress ? 'rgba(52, 211, 153, 0.12)' : 'rgba(107, 156, 255, 0.15)';
+    ctx.strokeStyle  = isProgress ? 'rgba(52, 211, 153, 0.30)' : 'rgba(107, 156, 255, 0.30)';
+    roundRect(ctx, bx, by, bw, bh, 11);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = isProgress ? '#34d399' : '#6b9cff';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, bx + 10, by + 12);
+  }
+
+  // Title
+  ctx.textBaseline = 'top';
+  ctx.font = '700 28px system-ui, -apple-system';
+  ctx.fillStyle = '#ffffff';
+  let cursorY = PAD + 96;
+  cursorY = wrap(ctx, data.title, PAD, cursorY, W - PAD * 2, 34, 2);
+
+  // Description
+  cursorY += 12;
+  ctx.font = '400 15px system-ui, -apple-system';
+  ctx.fillStyle = 'rgba(203, 213, 225, 0.88)';
+  wrap(ctx, data.description, PAD, cursorY, W - PAD * 2, 22, 6);
+
+  // Tags row
+  ctx.font = '600 10px system-ui';
+  ctx.textBaseline = 'middle';
+  let tagX = PAD;
+  const tagY = H - PAD - 68;
+  for (const tag of data.tags) {
+    const label = tag.toUpperCase();
+    const tw = ctx.measureText(label).width;
+    const tagW = tw + 18;
+    if (tagX + tagW > W - PAD) break;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    roundRect(ctx, tagX, tagY, tagW, 22, 11);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(203, 213, 225, 0.95)';
+    ctx.fillText(label, tagX + 9, tagY + 12);
+    tagX += tagW + 6;
+  }
+
+  // "VER PROYECTO →" pill — makes the interactive intent explicit
+  const cta = 'VER PROYECTO';
+  ctx.font = '700 12px system-ui';
+  const ctaTw = ctx.measureText(cta).width;
+  const ctaW = ctaTw + 46; // extra room for arrow
+  const ctaH = 34;
+  const ctaX = PAD;
+  const ctaY = H - PAD - ctaH;
+  ctx.fillStyle   = 'rgba(59, 114, 245, 0.95)';
+  ctx.strokeStyle = 'rgba(107, 156, 255, 0.6)';
+  ctx.lineWidth   = 1.5;
+  roundRect(ctx, ctaX, ctaY, ctaW, ctaH, ctaH / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(cta, ctaX + 16, ctaY + ctaH / 2 + 1);
+  // arrow
+  const ax = ctaX + 16 + ctaTw + 10;
+  const ay = ctaY + ctaH / 2;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth   = 2;
+  ctx.beginPath();
+  ctx.moveTo(ax, ay);
+  ctx.lineTo(ax + 12, ay);
+  ctx.moveTo(ax + 8, ay - 4);
+  ctx.lineTo(ax + 12, ay);
+  ctx.lineTo(ax + 8, ay + 4);
+  ctx.stroke();
+}
+
+/* Video card: image thumbnail + title/tag ---------------------------------- */
+
+function drawVideoTexture(canvas: HTMLCanvasElement, data: CardData) {
+  const ctx = canvas.getContext('2d')!;
+  const W = canvas.width  / 2;
+  const H = canvas.height / 2;
+  ctx.setTransform(2, 0, 0, 2, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+  roundRect(ctx, 0, 0, W, H, 24);
+  ctx.fill();
+
+  // Stronger border so the card boundary is obvious
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 1, 1, W - 2, H - 2, 24);
+  ctx.stroke();
+
+  // Clip image to a rounded rect on top
+  const IMG_H = Math.round(H * 0.55);
+  ctx.save();
+  roundRect(ctx, 0, 0, W, IMG_H, 24);
+  ctx.clip();
+  const img = data.imageUrl ? imageCache.get(data.imageUrl) : null;
+  if (img && img !== 'error') {
+    const imgAspect = img.width / img.height;
+    const dstAspect = W / IMG_H;
+    let dw, dh, dx, dy;
+    if (imgAspect > dstAspect) {
+      dh = IMG_H;
+      dw = imgAspect * dh;
+      dx = (W - dw) / 2;
+      dy = 0;
+    } else {
+      dw = W;
+      dh = dw / imgAspect;
+      dx = 0;
+      dy = (IMG_H - dh) / 2;
+    }
+    ctx.drawImage(img as HTMLImageElement, dx, dy, dw, dh);
+  } else {
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+    ctx.fillRect(0, 0, W, IMG_H);
+  }
+  // Play button overlay
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+  ctx.fillRect(0, 0, W, IMG_H);
+  const px = W / 2, py = IMG_H / 2;
+  ctx.fillStyle = '#dc2626';
+  ctx.beginPath();
+  ctx.arc(px, py, 32, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.moveTo(px - 8, py - 12);
+  ctx.lineTo(px - 8, py + 12);
+  ctx.lineTo(px + 14, py);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Text block
+  const tx = 24;
+  let ty = IMG_H + 20;
+  if (data.badge) {
+    ctx.font = '600 11px system-ui';
+    ctx.fillStyle = 'rgba(148, 163, 184, 1)';
+    ctx.textBaseline = 'top';
+    ctx.fillText(data.badge, tx, ty);
+    ty += 18;
+  }
+  ctx.font = '700 20px system-ui';
+  ctx.fillStyle = '#ffffff';
+  ty = wrap(ctx, data.title, tx, ty, W - tx * 2, 24, 2);
+  if (data.description) {
+    ty += 8;
+    ctx.font = '400 13px system-ui';
+    ctx.fillStyle = 'rgba(203, 213, 225, 0.75)';
+    wrap(ctx, data.description, tx, ty, W - tx * 2, 18, 2);
+  }
+
+  // "REPRODUCIR ▶" pill so the interactive intent is explicit
+  const cta = 'REPRODUCIR';
+  ctx.font = '700 12px system-ui';
+  const ctaTw = ctx.measureText(cta).width;
+  const ctaW  = ctaTw + 44;
+  const ctaH  = 32;
+  const ctaX  = tx;
+  const ctaY  = H - 24 - ctaH;
+  ctx.fillStyle   = 'rgba(220, 38, 38, 0.95)';
+  ctx.strokeStyle = 'rgba(248, 113, 113, 0.7)';
+  ctx.lineWidth   = 1.5;
+  roundRect(ctx, ctaX, ctaY, ctaW, ctaH, ctaH / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(cta, ctaX + 14, ctaY + ctaH / 2 + 1);
+  // triangle
+  const tPx = ctaX + 14 + ctaTw + 10;
+  const tPy = ctaY + ctaH / 2;
+  ctx.beginPath();
+  ctx.moveTo(tPx, tPy - 5);
+  ctx.lineTo(tPx, tPy + 5);
+  ctx.lineTo(tPx + 8, tPy);
+  ctx.closePath();
+  ctx.fill();
+}
+
+/* Read DOM card into CardData ---------------------------------------------- */
+
+function readCard(el: HTMLElement, kind: 'project' | 'video'): CardData {
+  const anchor = el.tagName === 'A' ? (el as HTMLAnchorElement) : el.querySelector<HTMLAnchorElement>('a');
+  const title = el.querySelector('h3')?.textContent?.trim() ?? '';
+  const description = el.querySelector('p')?.textContent?.trim() ?? '';
+  const tags = Array.from(el.querySelectorAll('.bg-white\\/5')).map(t => t.textContent?.trim() ?? '').filter(Boolean).slice(0, 6);
+  const img = el.querySelector('img');
+  const imageUrl = img?.src;
+  const iconEl = el.querySelector<HTMLElement>('[aria-hidden="true"].text-4xl, [aria-hidden="true"].text-5xl');
+  const iconChar = iconEl?.textContent?.trim();
+  const href = anchor?.href ?? '#';
+  const target = anchor?.target ?? '';
+  const featured = el.classList.contains('is-featured') ||
+    !!el.querySelector('.bg-brand-400\\/10');
+  let badge: string | undefined;
+  const featSpan = el.querySelector('.bg-brand-400\\/10');
+  if (featSpan) badge = featSpan.textContent?.trim();
+  const progSpan = el.querySelector('.bg-emerald-400\\/10');
+  if (progSpan) badge = progSpan.textContent?.trim().replace(/\s+/g, ' ');
+  return { title, description, tags, imageUrl, iconChar, href, target, featured, badge };
+}
+
+/* Init one section --------------------------------------------------------- */
+
+function initSection(section: HTMLElement) {
+  const kind: 'project' | 'video' = section.id === 'videos' ? 'video' : 'project';
+  const domCards = Array.from(section.querySelectorAll<HTMLElement>('[data-circular-card]'));
+  if (!domCards.length) return;
+
+  // Insert canvas overlay inside the pin
+  const pin = section.querySelector<HTMLElement>('[data-circular-pin]');
+  if (!pin) return;
+  const canvas = document.createElement('canvas');
+  canvas.className = 'wcg-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  // Inline styles as a safety net — some class-driven styles were racing with
+  // the initial layout and the canvas rendered at its 300x150 attribute default.
+  Object.assign(canvas.style, {
+    position: 'absolute',
+    inset: '0',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    display: 'block',
+    zIndex: '5',
+    pointerEvents: 'auto',
+  } satisfies Partial<CSSStyleDeclaration>);
+  pin.appendChild(canvas);
+  section.classList.add('has-webgl-carousel');
+
+  const cards = domCards.map((el) => readCard(el, kind));
+
+  // Preload thumbnails/logos
+  const loadTasks = cards
+    .map(c => c.imageUrl)
+    .filter(Boolean)
+    .map(u => loadImage(u!));
+
+  Promise.all(loadTasks).then(() => start());
+
+  function start() {
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({ canvas, alpha: true, dpr: Math.min(window.devicePixelRatio, 2), antialias: true });
+    } catch (e) {
+      // No WebGL — bail; DOM cards will show
+      section.classList.remove('has-webgl-carousel');
+      canvas.remove();
+      return;
+    }
+    const gl = renderer.gl;
+    gl.clearColor(0, 0, 0, 0);
+
+    const camera = new Camera(gl, { fov: 42, near: 0.1, far: 100 });
+    camera.position.set(0, 0, 5);
+    const scene = new Transform();
+
+    const CARD_W = 1.65;
+    const CARD_H = CARD_W * TEX_ASPECT;
+
+    const items = cards.map((data, i) => {
+      const tex = document.createElement('canvas');
+      tex.width  = TEX_W * 2;
+      tex.height = TEX_H * 2;
+      if (kind === 'video') drawVideoTexture(tex, data);
+      else                  drawCardTexture(tex, data);
+      const texture = new Texture(gl, {
+        image: tex,
+        generateMipmaps: false,
+        minFilter: gl.LINEAR,
+        magFilter: gl.LINEAR,
+      });
+      const geometry = new Plane(gl, { width: CARD_W, height: CARD_H });
+      const program = new Program(gl, {
+        vertex,
+        fragment,
+        uniforms: {
+          tMap:    { value: texture },
+          uActive: { value: 0 },
+          uHover:  { value: 0 },
+          uFocus:  { value: 0 },
+        },
+        transparent: true,
+        depthTest: false,
+        cullFace: null,
+      });
+      const mesh = new Mesh(gl, { geometry, program });
+      mesh.setParent(scene);
+      return { mesh, index: i, data, hover: 0, hoverTarget: 0 };
+    });
+
+    function resize() {
+      // Read the PIN's size, not the canvas — under some layout races the
+      // canvas element still reports its 300x150 attribute default even after
+      // inline styles are set.
+      const rect = pin!.getBoundingClientRect();
+      const w = Math.max(1, rect.width);
+      const h = Math.max(1, rect.height);
+      renderer.setSize(w, h);
+      camera.perspective({ aspect: w / h });
+    }
+    resize();
+    // Re-run once layout has definitely settled
+    requestAnimationFrame(resize);
+    window.addEventListener('resize', resize);
+
+    let running = true;
+    let hoveredIdx = -1;
+    let currentIdx = 0; // card whose `t` (stage - i) is closest to 0
+
+    function pickIdx(): number {
+      return currentIdx;
+    }
+
+    canvas.addEventListener('pointermove', () => {
+      const i = pickIdx();
+      hoveredIdx = i;
+      items.forEach((it, j) => { it.hoverTarget = j === i ? 1 : 0; });
+    });
+    canvas.addEventListener('pointerleave', () => {
+      items.forEach((it) => { it.hoverTarget = 0; });
+      hoveredIdx = -1;
+    });
+    canvas.addEventListener('click', (e) => {
+      e.preventDefault();
+      const i = hoveredIdx >= 0 ? hoveredIdx : pickIdx();
+      if (i < 0) return;
+      const d = items[i].data;
+      if (!d.href || d.href === '#') return;
+      if (d.target === '_blank') window.open(d.href, '_blank', 'noopener,noreferrer');
+      else                        window.location.href = d.href;
+    });
+
+    function smoothstep(a: number, b: number, x: number) {
+      const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    }
+
+    function frame() {
+      if (!running) return;
+      const rect = section.getBoundingClientRect();
+      const runway = rect.height - window.innerHeight;
+      let progress = 0;
+      if (rect.top < 0 && runway > 0) progress = -rect.top / runway;
+      if (rect.top < -runway) progress = 1;
+      progress = Math.max(0, Math.min(1, progress));
+
+      const N = items.length;
+      // Stage moves linearly from -0.15 to N-1+0.15, so the first card lands
+      // near the top of the section and the last one still lingers at the end.
+      const stage = -0.15 + progress * (N - 1 + 0.3);
+
+      let closest = 0;
+      let closestT = Infinity;
+      let anyHover = false;
+
+      items.forEach((it, i) => {
+        const t = stage - i; // <0 behind, 0 current, >0 exited
+        if (Math.abs(t) < closestT) { closestT = Math.abs(t); closest = i; }
+
+        let x = 0, y = 0, z = 0;
+        let rotZ = 0, rotY = 0;
+        let scale = 1;
+        let uA = 0;
+
+        if (t <= 0) {
+          // Behind or current — stacked, peeking from below the current one.
+          // Fully opaque so the boundary of every card stays crisp.
+          const d = -t;
+          x = 0;
+          y = -d * 0.09;
+          z = -d * 0.55;
+          rotZ = -d * 0.025;
+          scale = 1 - d * 0.06;
+          uA = 1;
+        } else {
+          // Exiting — fly up-and-right, tilt, fade quickly so it clears the way
+          const e = smoothstep(0, 1, t);
+          x = e * 1.2;
+          y = e * 2.2;
+          z = e * 1.1;
+          rotZ = -e * 0.42;
+          rotY = e * 0.18;
+          scale = 1 - e * 0.15;
+          uA = 1 - smoothstep(0.15, 0.85, t);
+        }
+
+        // Apply hover: only the current card responds
+        it.hover += (it.hoverTarget - it.hover) * 0.15;
+        if (Math.abs(t) < 0.35) {
+          scale += it.hover * 0.05;
+        }
+        if (it.hover > 0.5) anyHover = true;
+
+        it.mesh.position.set(x, y, z);
+        it.mesh.rotation.z = rotZ;
+        it.mesh.rotation.y = rotY;
+        it.mesh.scale.set(scale, scale, scale);
+        (it.mesh.program.uniforms.uActive as any).value = uA;
+        (it.mesh.program.uniforms.uHover as any).value  = it.hover;
+        // Focus glow only for the current card (t closest to 0)
+        (it.mesh.program.uniforms.uFocus as any).value  =
+          Math.abs(t) < 0.4 ? Math.max(0, 1 - Math.abs(t) / 0.4) : 0;
+      });
+
+      currentIdx = closest;
+
+      // Back-to-front for correct alpha blending
+      scene.children.sort((a: any, b: any) => a.position.z - b.position.z);
+
+      canvas.style.cursor = anyHover ? 'pointer' : '';
+
+      renderer.render({ scene, camera });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        requestAnimationFrame(frame);
+      } else if (!entry.isIntersecting && running) {
+        running = false;
+      }
+    });
+    io.observe(section);
+  }
+}
+
+export function initWebGLCarousels() {
+  document.querySelectorAll<HTMLElement>('[data-circular-scroll]').forEach((section) => {
+    if (section.classList.contains('has-webgl-carousel')) return;
+    initSection(section);
+  });
+}

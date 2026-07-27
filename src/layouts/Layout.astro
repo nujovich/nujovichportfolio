@@ -84,71 +84,69 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#FBFAF8" />
 
     <!-- Fonts: async load to avoid render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Kalam:wght@400;700&display=swap"
       as="style"
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Kalam:wght@400;700&display=swap"
         rel="stylesheet"
       />
     </noscript>
     <ClientRouter />
   </head>
 
-  <body class="bg-slate-950 text-slate-100 font-[Inter,sans-serif] antialiased">
-    <!-- Skip to content link for keyboard/screen-reader users -->
+  <body class="tinta-body antialiased">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-slate-900 focus:text-white focus:rounded-lg focus:ring-2 focus:ring-brand-400"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-[#14130F] focus:text-[#FBFAF8]"
     >
       Saltar al contenido principal
     </a>
 
-    <!-- Nav -->
     <header
       id="navbar"
-      class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      class="fixed top-0 left-0 right-0 z-50 tinta-nav"
       transition:persist
     >
-      <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="/" class="text-xl font-bold gradient-text hover:opacity-80 transition-opacity">
-          Nadia Ujovich
+      <nav class="max-w-[1080px] mx-auto px-6 py-5 flex items-center justify-between">
+        <a href="/" class="tinta-logo">
+          <span class="tinta-logo__name">Nadia Ujovich</span>
         </a>
-        <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-          <li><a href="#about"    class="hover:text-white transition-colors">Sobre mí</a></li>
-          <li><a href="#skills"   class="hover:text-white transition-colors">Skills</a></li>
-          <li><a href="#projects" class="hover:text-white transition-colors">Proyectos</a></li>
-          <li><a href="#videos"   class="hover:text-white transition-colors">Videos</a></li>
-          <li><a href="#contact"  class="hover:text-white transition-colors">Contacto</a></li>
+        <ul class="hidden md:flex items-center gap-7 tinta-nav__links">
+          <li><a href="#about"   ><span class="tinta-nav__num">01</span>Sobre</a></li>
+          <li><a href="#skills"  ><span class="tinta-nav__num">02</span>Stack</a></li>
+          <li><a href="#projects"><span class="tinta-nav__num">03</span>Proyectos</a></li>
+          <li><a href="#videos"  ><span class="tinta-nav__num">04</span>Charlas</a></li>
+          <li><a href="#contact" ><span class="tinta-nav__num">05</span>Contacto</a></li>
         </ul>
         <button
           id="menu-toggle"
-          class="md:hidden text-slate-300 hover:text-white"
+          class="md:hidden tinta-menu-btn"
           aria-label="Abrir menú de navegación"
           aria-expanded="false"
           aria-controls="mobile-menu"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </nav>
-      <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10">
-        <ul class="flex flex-col gap-4 px-6 py-4 text-sm font-medium text-slate-300">
-          <li><a href="#about"    class="hover:text-white transition-colors block py-1">Sobre mí</a></li>
-          <li><a href="#skills"   class="hover:text-white transition-colors block py-1">Skills</a></li>
-          <li><a href="#projects" class="hover:text-white transition-colors block py-1">Proyectos</a></li>
-          <li><a href="#videos"   class="hover:text-white transition-colors block py-1">Videos</a></li>
-          <li><a href="#contact"  class="hover:text-white transition-colors block py-1">Contacto</a></li>
+      <div id="mobile-menu" class="hidden md:hidden tinta-mobile-menu">
+        <ul class="flex flex-col gap-4 px-6 py-5">
+          <li><a href="#about"    class="block py-1">Sobre</a></li>
+          <li><a href="#skills"   class="block py-1">Stack</a></li>
+          <li><a href="#projects" class="block py-1">Proyectos</a></li>
+          <li><a href="#videos"   class="block py-1">Charlas</a></li>
+          <li><a href="#contact"  class="block py-1">Contacto</a></li>
         </ul>
       </div>
     </header>
@@ -157,19 +155,31 @@ const ogImage = 'https://nadiaujovich.dev/nadia.jpeg';
       <slot />
     </main>
 
-    <footer class="border-t border-white/10 py-10 text-center text-slate-500 text-sm">
-      <p>© {new Date().getFullYear()} Nadia Ujovich — Hecho con <span class="text-brand-400">♥</span> en Astro</p>
+    <footer class="tinta-footer">
+      <div class="max-w-[1080px] mx-auto px-6 py-10 flex flex-wrap items-baseline justify-between gap-4">
+        <span class="tinta-mono tinta-mono--muted">© {new Date().getFullYear()} · Nadia Ujovich</span>
+        <span class="tinta-mono tinta-mono--muted">nadiaujovich.dev</span>
+      </div>
     </footer>
 
     <script>
+      import '../scripts/main';
+    </script>
+    <script>
       const navbar = document.getElementById('navbar');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          navbar?.classList.add('glass', 'shadow-lg');
-        } else {
-          navbar?.classList.remove('glass', 'shadow-lg');
-        }
-      });
+      const hero   = document.getElementById('hero');
+      const updateNavMode = () => {
+        if (!navbar) return;
+        // The nav sits over the Ink hero at the top and inverts once its
+        // bottom edge crosses out of the hero into a Papel section.
+        const navBottom = navbar.getBoundingClientRect().bottom;
+        const heroBottom = hero ? hero.getBoundingClientRect().bottom : -Infinity;
+        const onPaper = navBottom > heroBottom - 8;
+        navbar.classList.toggle('is-on-paper', onPaper);
+      };
+      updateNavMode();
+      window.addEventListener('scroll', updateNavMode, { passive: true });
+      window.addEventListener('resize', updateNavMode);
 
       const toggle = document.getElementById('menu-toggle');
       const menu   = document.getElementById('mobile-menu');

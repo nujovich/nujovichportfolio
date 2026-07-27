@@ -1,167 +1,98 @@
 ---
 const videos = [
-  {
-    id: 'ffQYHnPhRV8',
-    title: 'Charla reciente',
-    description: '',
-    event: '',
-    tag: '',
-  },
-  {
-    id: 'igHnQ52lGrg',
-    title: 'Charla sobre Astro',
-    description:
-      'Mi última charla sobre Astro, el framework web moderno para construir sitios rápidos y orientados al contenido.',
-    event: 'Charla Astro',
-    tag: '🚀 Astro',
-  },
-  {
-    id: 'bMdlBjKSQF4',
-    title: 'Entrevista en Commit Conf 2024',
-    description:
-      'Entrevista en la Commit Conf 2024, una de las conferencias de desarrollo de software más importantes de España, celebrada en Madrid.',
-    event: 'Commit Conf 2024',
-    tag: '🎤 Conferencia',
-  },
-  {
-    id: 'BD930rVGQc0',
-    title: 'Seguridad Web',
-    description:
-      'Charla sobre los principales riesgos de seguridad web según OWASP Top 10, con ejemplos prácticos y cómo proteger tus aplicaciones.',
-    event: 'AccelOne Tech Talk',
-    tag: '🔒 Seguridad',
-  },
-  {
-    id: 'UcfMiU1Nk6E',
-    title: 'Bienvenidos a Mermelada Tech',
-    description:
-      'Video de presentación de la comunidad Mermelada Tech, el espacio inclusivo para mujeres y personas diversas en tecnología.',
-    event: 'Mermelada Tech',
-    tag: '🍓 Comunidad',
-  },
-  {
-    id: 'eBJNT8KV0ps',
-    title: 'Mermelada Tech en DevDay4Women',
-    description:
-      'Presentación de la comunidad Mermelada Tech en el Dev Day 4 Women, evento dedicado a visibilizar mujeres en tecnología.',
-    event: 'DevDay4Women',
-    tag: '🌸 Evento',
-  },
-  {
-    id: 'hQdEi54-pvw',
-    title: "Meetup 2024: Chicas en comunidades tech",
-    description:
-      'Meetup de Mermelada Tech en 2024, con debate y reflexiones sobre la participación de mujeres en comunidades tecnológicas.',
-    event: 'Mermelada Tech Meetup',
-    tag: '🤝 Meetup',
-  },
+  { id: 'ffQYHnPhRV8', title: 'Charla reciente',                         tag: 'Última charla', featured: true },
+  { id: 'igHnQ52lGrg', title: 'Astro — el framework web moderno',        tag: 'Astro' },
+  { id: 'bMdlBjKSQF4', title: 'Entrevista Commit Conf 2024',             tag: 'Commit Conf' },
+  { id: 'BD930rVGQc0', title: 'Seguridad Web — OWASP Top 10',            tag: 'Seguridad' },
+  { id: 'UcfMiU1Nk6E', title: 'Bienvenidos a Mermelada Tech',            tag: 'Comunidad' },
+  { id: 'eBJNT8KV0ps', title: 'Mermelada Tech en DevDay4Women',          tag: 'Evento' },
+  { id: 'hQdEi54-pvw', title: 'Meetup 2024: Chicas en comunidades tech', tag: 'Meetup' },
+];
+
+const styles = [
+  { color: "pink",     rot:  3, tx:  -8, ty:  10 },
+  { color: "yellow",   rot: -4, tx:  10, ty:  30 },
+  { color: "mint",     rot:  2, tx:  -4, ty:  -6 },
+  { color: "peach",    rot: -3, tx:  12, ty:  22 },
+  { color: "blue",     rot:  4, tx:   0, ty:  -18 },
+  { color: "lavender", rot: -5, tx:  -10, ty: 14 },
+  { color: "yellow",   rot:  3, tx:   6, ty:  -8 },
 ];
 ---
 
-<section id="videos" class="py-32 px-6 bg-slate-900/50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-16">
-      <p class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">YouTube</p>
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white">
-        Charlas & <span class="gradient-text">Videos</span>
-      </h2>
-      <p class="text-slate-400 mt-4 max-w-xl mx-auto">
-        Mis apariciones en conferencias, comunidades y canales de tecnología.
-      </p>
-    </div>
+<section
+  id="videos"
+  class="tinta-section tinta-videos"
+>
+  <div class="corkboard" aria-hidden="true"></div>
 
-    <!-- Featured video -->
-    <div class="mb-10 glass rounded-2xl overflow-hidden card-hover">
-      <div class="aspect-video w-full">
-        <button
-          class="yt-facade relative w-full h-full cursor-pointer group block"
-          data-id={videos[0].id}
-          data-title={videos[0].title}
-          aria-label={`Reproducir: ${videos[0].title}`}
-        >
-          <img
-            src={`https://img.youtube.com/vi/${videos[0].id}/hqdefault.jpg`}
-            alt=""
-            width="480"
-            height="360"
-            loading="eager"
-            decoding="async"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <svg class="w-8 h-8 text-white ml-1.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
-          </div>
-        </button>
-      </div>
-      <div class="p-6">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="text-xs font-semibold text-brand-400 bg-brand-400/10 border border-brand-400/20 rounded-full px-3 py-1">
-            Destacado
-          </span>
-          {videos[0].tag && <span class="text-xs text-slate-500">{videos[0].tag}</span>}
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">{videos[0].title}</h3>
-        {videos[0].description && <p class="text-slate-400 text-sm">{videos[0].description}</p>}
-      </div>
-    </div>
+  <div class="tinta-section__header">
+    <span class="tinta-section-num">04</span>
+    <h2 class="tinta-h2" data-reveal>Charlas & Videos</h2>
+  </div>
 
-    <!-- Grid of other videos -->
-    <div class="grid md:grid-cols-2 gap-6">
-      {videos.slice(1).map(({ id, title, description, tag }) => (
-        <div class="glass rounded-2xl overflow-hidden card-hover">
-          <div class="aspect-video w-full">
+  <p class="tinta-lede" data-reveal style="--reveal-delay: 80ms">
+    Mis apariciones en conferencias, comunidades y canales.
+  </p>
+
+  <div class="postit-grid">
+      {
+        videos.map(({ id, title, tag, featured }, i) => {
+          const s = styles[i % styles.length];
+          return (
             <button
-              class="yt-facade relative w-full h-full cursor-pointer group block"
+              class={`postit postit--${s.color} postit--video yt-facade`}
               data-id={id}
               data-title={title}
+              data-cursor-label="Play"
+              data-reveal
+              style={`--rot: ${s.rot}deg; --tx: ${s.tx}px; --ty: ${s.ty}px; --reveal-delay: ${i * 80}ms;`}
               aria-label={`Reproducir: ${title}`}
             >
-              <img
-                src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-                alt=""
-                width="480"
-                height="360"
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-                <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <svg class="w-5 h-5 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
+              <span class="postit__tape" aria-hidden="true"></span>
+              <div class="postit__thumb">
+                <img
+                  src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                  alt=""
+                  width="480" height="360"
+                  loading="lazy" decoding="async"
+                />
+                <span class="postit__play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </span>
               </div>
+              <div class="postit__meta">
+                {tag && <span class="postit__tag postit__tag--dark">#{tag}</span>}
+                {featured && <span class="postit__badge postit__badge--featured">★ Destacado</span>}
+              </div>
+              <h3 class="postit__title postit__title--sm">{title}</h3>
             </button>
-          </div>
-          <div class="p-5">
-            {tag && <span class="text-xs text-slate-500 block mb-2">{tag}</span>}
-            <h3 class="text-base font-bold text-white mb-2">{title}</h3>
-            {description && <p class="text-slate-400 text-sm leading-relaxed">{description}</p>}
-          </div>
-        </div>
-      ))}
-    </div>
+          );
+        })
+      }
   </div>
 </section>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('.yt-facade').forEach(btn => {
+  document.querySelectorAll<HTMLButtonElement>('.yt-facade').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
+      const id    = btn.dataset.id;
       const title = btn.dataset.title ?? '';
       const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      iframe.src   = `https://www.youtube.com/embed/${id}?autoplay=1`;
       iframe.title = title;
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.allowFullscreen = true;
-      iframe.className = 'w-full h-full';
+      iframe.className = 'w-full h-full absolute inset-0';
       iframe.style.border = '0';
-      btn.replaceWith(iframe);
+      // Replace the whole postit with an iframe centered in the section
+      const wrapper = document.createElement('div');
+      wrapper.className = 'postit postit--video is-playing';
+      wrapper.style.transform = 'none';
+      wrapper.style.position  = 'relative';
+      wrapper.style.aspectRatio = '16/9';
+      wrapper.appendChild(iframe);
+      btn.replaceWith(wrapper);
     });
   });
 </script>

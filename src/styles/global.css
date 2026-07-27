@@ -1,19 +1,164 @@
 @import "tailwindcss";
 
-@theme {
-  --color-brand-50: #f0f4ff;
-  --color-brand-100: #e0e9ff;
-  --color-brand-200: #c1d3ff;
-  --color-brand-400: #6b9cff;
-  --color-brand-500: #3b72f5;
-  --color-brand-600: #2457d9;
-  --color-brand-700: #1a3fa6;
-  --color-brand-800: #122c73;
-  --color-brand-900: #0b1c4d;
+/* ── Marca Tinta — design system ─────────────────────────────────────── */
 
-  --color-accent-400: #a78bfa;
-  --color-accent-500: #8b5cf6;
-  --color-accent-600: #7c3aed;
+@theme {
+  /* Tinta palette */
+  --color-tinta:    #14130F;
+  --color-grafito:  #4A463F;
+  --color-piedra:   #6E6A62;
+  --color-arena:    #C9C2B6;
+  --color-linea:    #E2DED6;
+  --color-papel:    #FBFAF8;
+
+  /* Legacy tokens kept as aliases so any lingering utility classes still
+     render something sensible. brand-* maps to Tinta scale, accent-* to
+     warm Grafito/Piedra so nothing bright leaks through. */
+  --color-brand-50:  #FBFAF8;
+  --color-brand-100: #E2DED6;
+  --color-brand-200: #C9C2B6;
+  --color-brand-400: #6E6A62;
+  --color-brand-500: #4A463F;
+  --color-brand-600: #2A2721;
+  --color-brand-700: #1E1C17;
+  --color-brand-800: #171612;
+  --color-brand-900: #14130F;
+
+  --color-accent-400: #6E6A62;
+  --color-accent-500: #4A463F;
+  --color-accent-600: #2A2721;
+
+  --font-serif: 'Instrument Serif', 'EB Garamond', ui-serif, serif;
+  --font-sans:  'Instrument Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, monospace;
+}
+
+.tinta-body {
+  background: #FBFAF8;
+  color: #14130F;
+  font-family: 'Instrument Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* ── Type helpers ── */
+.tinta-serif  { font-family: 'Instrument Serif', ui-serif, serif; font-weight: 400; letter-spacing: -0.02em; }
+.tinta-sans   { font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; }
+.tinta-mono   { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6E6A62; }
+.tinta-mono--muted { color: #8E8880; text-transform: none; letter-spacing: 0.04em; }
+
+.tinta-eyebrow {
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #6E6A62;
+}
+.tinta-eyebrow--dark { color: #C9C2B6; }
+
+.tinta-section-num {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #6E6A62;
+  text-transform: uppercase;
+}
+
+.tinta-h2 {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: #14130F;
+}
+
+.tinta-rule {
+  height: 1px;
+  background: #E2DED6;
+  border: 0;
+}
+.tinta-rule--ink { background: #14130F; }
+
+/* Nav — starts over the Ink hero, inverts once it enters Papel */
+.tinta-nav {
+  background: rgba(20, 19, 15, 0);
+  transition: background 0.35s ease, border-color 0.35s ease;
+  border-bottom: 1px solid transparent;
+  color: #FBFAF8;
+}
+.tinta-nav.is-on-paper {
+  background: rgba(251, 250, 248, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom-color: #E2DED6;
+  color: #14130F;
+}
+.tinta-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.tinta-logo__name {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  color: inherit;
+  transition: color 0.25s ease, opacity 0.25s ease;
+}
+.tinta-logo:hover .tinta-logo__name { opacity: 0.65; }
+.tinta-nav__links {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tinta-nav__links li { display: inline-flex; align-items: baseline; gap: 8px; }
+.tinta-nav__links a { color: inherit; text-decoration: none; transition: opacity 0.25s ease; }
+.tinta-nav__links a:hover { opacity: 0.6; }
+.tinta-nav__num { opacity: 0.55; font-size: 10px; }
+
+.tinta-menu-btn { color: inherit; background: transparent; border: 0; }
+.tinta-mobile-menu {
+  background: #FBFAF8;
+  border-top: 1px solid #E2DED6;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #14130F;
+}
+.tinta-mobile-menu a { color: #14130F; text-decoration: none; }
+
+/* Footer */
+.tinta-footer {
+  border-top: 1px solid #E2DED6;
+  background: #FBFAF8;
+  color: #6E6A62;
+}
+
+/* Section skeleton */
+.tinta-section {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 88px 0;
+  border-bottom: 1px solid #E2DED6;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.tinta-section:last-of-type { border-bottom: 0; }
+.tinta-section__header {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+.tinta-section__header h2 { margin: 0; }
+.tinta-lede {
+  max-width: 620px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #4A463F;
 }
 
 ::view-transition-old(root),
@@ -43,26 +188,744 @@ html {
   scroll-behavior: smooth;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #6b9cff, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Lenis smooth-scroll requires disabling native smooth on <html> */
+html.lenis, html.lenis body { height: auto; }
+html.lenis-smooth { scroll-behavior: auto !important; }
+html.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* Reveal-on-scroll — default rises + fades */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, clip-path;
+}
+[data-reveal].is-visible { opacity: 1; transform: translate3d(0, 0, 0); }
+
+/* Variants */
+[data-reveal="left"]  { transform: translate3d(-60px, 0, 0); }
+[data-reveal="right"] { transform: translate3d(60px, 0, 0); }
+[data-reveal="left"].is-visible,
+[data-reveal="right"].is-visible { transform: translate3d(0, 0, 0); }
+[data-reveal="clip"] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 100% 0 0);
+}
+[data-reveal="clip"].is-visible { clip-path: inset(0 0 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; clip-path: none; transition: none; }
 }
 
+/* Top scroll progress indicator */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  background: #14130F;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 100;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Custom arrow cursor — hide the OS cursor on every element while it's active */
+html, body { cursor: none; }
+body * { cursor: none; }
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  color: #14130F;
+  filter: drop-shadow(0 1px 2px rgba(20, 19, 15, 0.35));
+  transition: opacity 0.2s ease, color 0.3s ease;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* When over a dark section (Hero) we invert the arrow so it stays visible */
+.custom-cursor.is-on-ink { color: #FBFAF8; }
+.custom-cursor__arrow {
+  transform-origin: 4px 4px;
+  transition: transform 0.05s linear, scale 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.custom-cursor.is-hover .custom-cursor__arrow { scale: 1.35; }
+.custom-cursor__label {
+  padding: 4px 10px;
+  background: #14130F;
+  color: #FBFAF8;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.custom-cursor.is-on-ink .custom-cursor__label { background: #FBFAF8; color: #14130F; }
+.custom-cursor.has-label .custom-cursor__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+.custom-cursor.is-hidden { opacity: 0; }
+@media (pointer: coarse) {
+  .custom-cursor { display: none; }
+  html, body, body * { cursor: auto; }
+}
+
+/* Magnetic elements: script drives translate3d; we set the transition for the return-to-rest */
+[data-magnetic] {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Hero WebGL canvas fills its section */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+  opacity: 1;
+}
+
+/* Hero — modo Tinta editorial */
+.tinta-hero {
+  position: relative;
+  min-height: 100vh;
+  background: #14130F;
+  color: #FBFAF8;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 120px 40px 100px;
+}
+.tinta-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.tinta-hero__eyebrow {
+  color: #C9C2B6;
+}
+.tinta-hero__name-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+.tinta-hero__name {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-weight: 400;
+  font-size: clamp(4.5rem, 12vw, 8.25rem);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  color: #FBFAF8;
+  margin: 0;
+}
+.tinta-hero__descriptor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 12px;
+}
+.tinta-hero__filet {
+  width: 1px;
+  height: 88px;
+  background: #6E6A62;
+}
+.tinta-hero__role {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #C9C2B6;
+  line-height: 1.7;
+}
+.tinta-hero__lede {
+  margin: 0;
+  max-width: 560px;
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  line-height: 1.35;
+  color: #E2DED6;
+  text-wrap: pretty;
+}
+.tinta-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.tinta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  font-family: 'Instrument Sans', ui-sans-serif, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+}
+.tinta-btn--ink   { background: #FBFAF8; color: #14130F; }
+.tinta-btn--ink:hover { background: #E2DED6; }
+.tinta-btn--ghost { background: transparent; color: #FBFAF8; border-color: #4A463F; }
+.tinta-btn--ghost:hover { border-color: #FBFAF8; }
+.tinta-btn--dark  { background: #14130F; color: #FBFAF8; }
+.tinta-btn--dark:hover { background: #4A463F; }
+.tinta-btn--outline { background: transparent; color: #14130F; border-color: #14130F; }
+.tinta-btn--outline:hover { background: #14130F; color: #FBFAF8; }
+.tinta-btn__arrow { display: inline-block; transition: transform 0.35s ease; }
+.tinta-btn:hover .tinta-btn__arrow { transform: translateX(4px); }
+
+.tinta-hero__scroll-cue {
+  position: absolute;
+  bottom: 32px;
+  left: 40px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #C9C2B6;
+}
+.tinta-hero__scroll-line {
+  width: 40px;
+  height: 1px;
+  background: #6E6A62;
+  animation: scroll-cue 2.4s ease-in-out infinite;
+  transform-origin: left;
+}
+@keyframes scroll-cue {
+  0%, 100% { transform: scaleX(0.4); }
+  50%      { transform: scaleX(1);   }
+}
+
+/* ── About (modo papel editorial) ── */
+.tinta-about__grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .tinta-about__grid { grid-template-columns: 1fr; gap: 40px; }
+}
+.tinta-about__portrait { display: flex; flex-direction: column; gap: 20px; }
+.tinta-about__frame {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid #E2DED6;
+  padding: 8px;
+  background: #FBFAF8;
+}
+.tinta-about__photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+  filter: grayscale(0.15) contrast(1.02);
+}
+.tinta-about__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 8px;
+}
+.tinta-about__stats > div { display: flex; align-items: baseline; gap: 14px; }
+.tinta-about__stat-num {
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #14130F;
+  min-width: 72px;
+}
+.tinta-about__body { display: flex; flex-direction: column; gap: 20px; }
+.tinta-about__intro {
+  font-size: clamp(2.2rem, 4.4vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  margin: 4px 0 6px;
+  color: #14130F;
+}
+.tinta-about__intro em { font-style: italic; }
+.tinta-about__p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #4A463F;
+  max-width: 58ch;
+}
+.tinta-about__p em { font-style: italic; color: #14130F; }
+.tinta-about__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 24px;
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #E2DED6;
+}
+.tinta-about__highlights > div {
+  display: flex; align-items: baseline; gap: 12px;
+  font-size: 14px;
+  color: #14130F;
+}
+
+/* Links */
+.tinta-link {
+  color: #14130F;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.25s ease;
+}
+.tinta-link:hover { color: #6E6A62; }
+
+/* ── Skills (numbered editorial list) ── */
+.tinta-skills__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+@media (max-width: 900px) { .tinta-skills__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .tinta-skills__grid { grid-template-columns: 1fr; } }
+.tinta-skills__col { display: flex; flex-direction: column; gap: 12px; }
+.tinta-skills__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.tinta-skills__label {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  color: #14130F;
+}
+.tinta-skills__list {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tinta-skills__list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #E2DED6;
+  font-size: 14px;
+  color: #4A463F;
+}
+.tinta-skills__list li:last-child { border-bottom: 0; }
+
+/* ── Contact (minimal editorial) ── */
+.tinta-contact__lede {
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  line-height: 1.3;
+  color: #4A463F;
+  max-width: 640px;
+  margin: 0;
+}
+.tinta-contact__mail {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 16px 0 20px;
+  border-top: 1px solid #14130F;
+  border-bottom: 1px solid #14130F;
+  text-decoration: none;
+  color: #14130F;
+  transition: color 0.35s ease;
+  width: 100%;
+  max-width: 720px;
+  justify-content: space-between;
+}
+.tinta-contact__mail:hover { color: #6E6A62; }
+.tinta-contact__mail-address {
+  font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+  letter-spacing: -0.02em;
+}
+.tinta-contact__mail-arrow {
+  font-size: 24px;
+  transition: transform 0.35s ease;
+}
+.tinta-contact__mail:hover .tinta-contact__mail-arrow { transform: translateX(6px); }
+
+.tinta-contact__socials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid #E2DED6;
+}
+@media (max-width: 640px) { .tinta-contact__socials { grid-template-columns: 1fr; } }
+.tinta-contact__social {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid #E2DED6;
+  text-decoration: none;
+  color: #14130F;
+  transition: color 0.25s ease;
+}
+.tinta-contact__social-name {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+}
+.tinta-contact__social-arrow {
+  color: #6E6A62;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+.tinta-contact__social:hover { color: #6E6A62; }
+.tinta-contact__social:hover .tinta-contact__social-arrow { transform: translate(4px, -4px); color: #14130F; }
+
+/* Post-it board — sits over Papel with a very subtle warm wash */
+.corkboard {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(201, 194, 182, 0.30), transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(201, 194, 182, 0.20), transparent 60%);
+  pointer-events: none;
+}
+
+.postit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem 2.5rem;
+  padding: 1.5rem 0.5rem 3rem;
+}
+@media (max-width: 900px) {
+  .postit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 1.5rem; }
+}
+@media (max-width: 620px) {
+  .postit-grid { grid-template-columns: 1fr; gap: 2rem; padding: 1rem 0; }
+}
+
+.postit {
+  --rot: 0deg;
+  --tx: 0px;
+  --ty: 0px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 20px;
+  min-height: 260px;
+  color: #14130F; /* Tinta */
+  text-decoration: none;
+  text-align: left;
+  border: 0;
+  font-family: 'Kalam', 'Caveat', 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', system-ui, cursive;
+  transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+  /* Warmer, more paper-like drop shadow */
+  box-shadow:
+    0 2px 4px rgba(20, 19, 15, 0.14),
+    0 14px 26px rgba(20, 19, 15, 0.30);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.postit:hover,
+.postit:focus-visible {
+  transform: translate(var(--tx), calc(var(--ty) - 8px)) rotate(calc(var(--rot) * 0.35)) scale(1.03);
+  box-shadow:
+    0 4px 6px rgba(20, 19, 15, 0.20),
+    0 26px 44px rgba(20, 19, 15, 0.42);
+  z-index: 10;
+  outline: none;
+}
+@media (max-width: 620px) {
+  /* Reduce transform offset on small screens so cards don't clip */
+  .postit { --tx: 0px; --ty: 0px; }
+}
+
+/* Reveal integration: keep the rotation while fading in */
+[data-reveal].postit           { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 40px)) rotate(var(--rot)); }
+[data-reveal].postit.is-visible { opacity: 1; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
+
+/* Paper tape at the top-center — warm off-white to match the Tinta paper */
+.postit__tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-4deg);
+  width: 84px;
+  height: 22px;
+  background: rgba(251, 250, 248, 0.65); /* Papel */
+  border-left:  1px dashed rgba(20, 19, 15, 0.10);
+  border-right: 1px dashed rgba(20, 19, 15, 0.10);
+  box-shadow: 0 1px 3px rgba(20, 19, 15, 0.10);
+  pointer-events: none;
+}
+
+/* Color variants — Marca Tinta palette: warm cream, sand, and muted tints
+   built off Papel #FBFAF8 and Arena #C9C2B6. No saturated pastels. */
+.postit--yellow   { background: linear-gradient(150deg, #F5ECC8 0%, #E6D89A 100%); } /* Ocre */
+.postit--pink     { background: linear-gradient(150deg, #EFDCD4 0%, #DDBBB0 100%); } /* Rosa polvo */
+.postit--blue     { background: linear-gradient(150deg, #DEE1E5 0%, #BEC4CB 100%); } /* Piedra fría */
+.postit--mint     { background: linear-gradient(150deg, #DCE3D6 0%, #BBC7AE 100%); } /* Salvia */
+.postit--peach    { background: linear-gradient(150deg, #F0DAC6 0%, #DDB79A 100%); } /* Terracota */
+.postit--lavender { background: linear-gradient(150deg, #E1DEE7 0%, #C1BBD0 100%); } /* Lila apagado */
+
+.postit__head    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
+.postit__logo    { height: 44px; width: auto; object-fit: contain; }
+.postit__icon    { font-size: 2.25rem; line-height: 1; }
+.postit__badges  { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.postit__badge   {
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(20, 19, 15, 0.08);
+  color: rgba(20, 19, 15, 0.7);
+}
+.postit__badge--featured { background: #14130F; color: #FBFAF8; }        /* Tinta on Papel */
+.postit__badge--progress { background: rgba(74, 70, 63, 0.9); color: #FBFAF8; } /* Grafito */
+
+.postit__title {
+  font-family: 'Kalam', 'Caveat', cursive, system-ui;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  margin: 4px 0 8px;
+  color: #14130F; /* Tinta */
+}
+.postit__title--sm { font-size: 1.15rem; margin-top: 10px; }
+.postit__desc {
+  font-family: 'Kalam', 'Caveat', cursive, system-ui;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: rgba(74, 70, 63, 0.92); /* Grafito */
+  flex: 1;
+}
+.postit__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 12px;
+  font-family: system-ui, sans-serif;
+}
+.postit__tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(74, 70, 63, 0.75);           /* Grafito */
+  background: rgba(20, 19, 15, 0.06);      /* Tinta wash */
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.postit__tag--dark { background: rgba(20, 19, 15, 0.16); color: rgba(20, 19, 15, 0.82); }
+
+/* Video-flavored post-it */
+.postit--video { padding: 14px 14px 18px; min-height: 260px; }
+.postit__thumb {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.postit__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.postit__play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  background: #dc2626;
+  color: #fff;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.postit--video:hover .postit__play,
+.postit--video:focus-visible .postit__play { transform: translate(-50%, -50%) scale(1.12); }
+.postit__meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+
+/* Circular (3D cylindrical carousel) scroll — kept for any legacy sections
+   that still opt in with data-circular-scroll (currently none). */
+[data-circular-scroll] { position: relative; }
+
+[data-circular-pin] {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+/* Wheel: a 0x0 point at the center of the pinned viewport.
+   Its coordinate system is preserved in 3D so children live on a real
+   circumference around it. */
+[data-circular-wheel] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--wheel-rot, 0deg));
+  transform-origin: 0 0 0;
+  will-change: transform;
+}
+
+/* Each card is placed on the circumference: rotate around the Y axis by its
+   base angle, then translate outward by the radius. `translate(-50%, -50%)`
+   applies first (in the card's own frame) so the card is centered on the
+   point it ends up at. */
+/* Doubled attribute selector to raise specificity above sibling classes like
+   `.spotlight { position: relative }` that Tailwind emits later in the output
+   bundle. */
+[data-circular-card][data-circular-card] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Every card gets the SAME width and height — this is what keeps them from
+     staggering on the ring. Featured cards get no size override. */
+  width: 320px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transform:
+    rotateY(var(--base-angle, 0deg))
+    translateZ(var(--radius, 620px))
+    translate(-50%, -50%);
+  transform-origin: 0 0;
+  /* Opacity blends between back and front so back cards still peek through */
+  opacity: calc(0.28 + 0.72 * var(--card-active, 0));
+  z-index: calc(100 + (var(--card-depth, 0) * 100));
+  transition: opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+[data-circular-card] > * { min-height: 0; } /* let flex children shrink */
+
+/* WebGL carousel overlay. When active, the canvas paints on top of the pin
+   and the CSS 3D DOM cards fade out but stay hit-testable so keyboard
+   navigation, screen readers, and click-throughs to real URLs keep working. */
+.wcg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: auto;
+  display: block;
+}
+.has-webgl-carousel [data-circular-wheel] {
+  opacity: 0;
+  pointer-events: none;
+}
+.has-webgl-carousel [data-circular-card] {
+  /* Kept in the DOM for a11y — clicks are routed via the canvas overlay */
+  pointer-events: none;
+}
+
+/* Center hint (subtle gradient anchor for the wheel) */
+[data-circular-scroll]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 40% at 50% 30%,
+    rgba(107, 156, 255, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* Neutralised legacy tokens — Marca Tinta uses type + one ink, no gradients */
+.gradient-text {
+  color: #14130F;
+  font-style: italic;
+  font-family: 'Instrument Serif', ui-serif, serif;
+}
+.gradient-bg {
+  background: #FBFAF8;
+}
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(251, 250, 248, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid #E2DED6;
 }
 
 .card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.5s ease;
 }
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(59, 114, 245, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(59, 114, 245, 0.18);
 }
+
+/* Cursor-following spotlight overlay — cleaner replacement for the SVG turbulence */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    280px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(167, 139, 250, 0.65),
+    rgba(107, 156, 255, 0.35) 30%,
+    transparent 65%
+  );
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(167, 139, 250, 0.12),
+    transparent 55%
+  );
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.spotlight > * { position: relative; z-index: 2; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -84,8 +947,4 @@ html {
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-.gradient-bg {
-  background: linear-gradient(-45deg, #0b1c4d, #122c73, #1a3fa6, #3b2d8f);
-  background-size: 400% 400%;
-  animation: gradient-shift 12s ease infinite;
-}
+/* removed */
