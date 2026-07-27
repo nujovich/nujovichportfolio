@@ -318,6 +318,19 @@ function initSection(section: HTMLElement) {
   const canvas = document.createElement('canvas');
   canvas.className = 'wcg-canvas';
   canvas.setAttribute('aria-hidden', 'true');
+  // Inline styles as a safety net — some class-driven styles were racing with
+  // the initial layout and the canvas rendered at its 300x150 attribute default.
+  Object.assign(canvas.style, {
+    position: 'absolute',
+    inset: '0',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    display: 'block',
+    zIndex: '5',
+    pointerEvents: 'auto',
+  } satisfies Partial<CSSStyleDeclaration>);
   pin.appendChild(canvas);
   section.classList.add('has-webgl-carousel');
 
@@ -386,11 +399,18 @@ function initSection(section: HTMLElement) {
     });
 
     function resize() {
-      const rect = canvas.getBoundingClientRect();
-      renderer.setSize(rect.width, rect.height);
-      camera.perspective({ aspect: rect.width / rect.height });
+      // Read the PIN's size, not the canvas — under some layout races the
+      // canvas element still reports its 300x150 attribute default even after
+      // inline styles are set.
+      const rect = pin!.getBoundingClientRect();
+      const w = Math.max(1, rect.width);
+      const h = Math.max(1, rect.height);
+      renderer.setSize(w, h);
+      camera.perspective({ aspect: w / h });
     }
     resize();
+    // Re-run once layout has definitely settled
+    requestAnimationFrame(resize);
     window.addEventListener('resize', resize);
 
     const sweep = (Number(section.dataset.arcSweep ?? '540')) * Math.PI / 180;
