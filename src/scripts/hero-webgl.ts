@@ -69,24 +69,25 @@ const fragment = /* glsl */ `
     float n1 = fbm(p * 1.2 + vec2(t, -t * 0.7));
     float n2 = fbm(p * 2.0 + vec2(-t * 0.5, t * 0.9) + n1);
 
-    // Marca Tinta palette — Tinta -> Grafito with subtle warm highlights
+    // Marca Tinta — near-flat Tinta with the faintest ink-wash motion.
+    // No highlight blobs, no accent colour: just Tinta breathing into Grafito
+    // at ~10% strength, plus a mild grain to keep it from banding.
     vec3 c1 = vec3(0.078, 0.075, 0.059); // Tinta   #14130F
-    vec3 c2 = vec3(0.290, 0.275, 0.247); // Grafito #4A463F
-    vec3 c3 = vec3(0.788, 0.760, 0.714); // Arena   #C9C2B6
+    vec3 c2 = vec3(0.180, 0.170, 0.145); // between Tinta and Grafito
 
-    vec3 col = mix(c1, c2, smoothstep(-0.6, 0.9, n1));
-    col      = mix(col, c3, smoothstep(0.4, 0.95, n2) * 0.28);
+    float n = smoothstep(-0.5, 0.8, n1 * 0.6 + n2 * 0.4);
+    vec3 col = mix(c1, c2, n * 0.55);
 
-    // Cursor warm highlight — very subtle so it never breaks the ink mood
-    col += vec3(0.25, 0.22, 0.16) * m * 0.35;
+    // Cursor: subtle warming, never bright
+    col += vec3(0.05, 0.045, 0.035) * m * 0.4;
 
-    // Vignette pulls attention to the type
-    float vig = smoothstep(1.2, 0.2, length((uv - 0.5) * vec2(1.4, 1.0)));
-    col *= 0.55 + vig * 0.45;
+    // Strong vignette so corners stay clean Tinta
+    float vig = smoothstep(1.05, 0.15, length((uv - 0.5) * vec2(1.5, 1.0)));
+    col *= 0.72 + vig * 0.28;
 
     // Paper grain
     float grain = fract(sin(dot(uv * uResolution, vec2(12.9898, 78.233))) * 43758.5453);
-    col += (grain - 0.5) * 0.03;
+    col += (grain - 0.5) * 0.022;
 
     gl_FragColor = vec4(col, 1.0);
   }

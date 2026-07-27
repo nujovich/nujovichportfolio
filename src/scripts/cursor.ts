@@ -4,8 +4,9 @@ export function initCursor() {
   if (document.querySelector('.custom-cursor')) return;
 
   const cursor = document.createElement('div');
-  cursor.className = 'custom-cursor';
+  cursor.className = 'custom-cursor is-hidden';
   cursor.setAttribute('aria-hidden', 'true');
+  cursor.style.transform = `translate3d(${window.innerWidth / 2}px, ${window.innerHeight / 2}px, 0)`;
   cursor.innerHTML = `
     <svg class="custom-cursor__arrow" viewBox="0 0 32 32" width="28" height="28">
       <path
@@ -32,6 +33,9 @@ export function initCursor() {
   const onMove = (e: PointerEvent) => {
     target.x = e.clientX;
     target.y = e.clientY;
+    // Reveal the cursor on the very first pointer event so it doesn't flash
+    // at (0, 0) before layout / RAF settles.
+    if (cursor.classList.contains('is-hidden')) cursor.classList.remove('is-hidden');
     // Toggle "on-ink" state when the pointer is over a section flagged with
     // [data-tinta-mode="ink"] so the cursor stays readable on dark spreads.
     const under = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;

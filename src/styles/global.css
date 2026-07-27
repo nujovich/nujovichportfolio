@@ -94,28 +94,16 @@
 .tinta-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
   text-decoration: none;
 }
-.tinta-logo__mark {
+.tinta-logo__name {
   font-family: 'Instrument Serif', ui-serif, serif;
   font-size: 22px;
+  letter-spacing: -0.015em;
   color: #14130F;
-  letter-spacing: -0.02em;
-  border: 1px solid #14130F;
-  padding: 2px 8px 3px;
-  line-height: 1;
+  transition: color 0.25s ease;
 }
-.tinta-logo__name {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6E6A62;
-}
-@media (max-width: 640px) {
-  .tinta-logo__name { display: none; }
-}
+.tinta-logo:hover .tinta-logo__name { color: #6E6A62; }
 .tinta-nav__links {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 11px;
@@ -311,7 +299,7 @@ body * { cursor: none; }
   height: 100%;
   z-index: 0;
   display: block;
-  opacity: 0.72;
+  opacity: 1;
 }
 
 /* Hero — modo Tinta editorial */
