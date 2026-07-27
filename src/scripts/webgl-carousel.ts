@@ -31,14 +31,24 @@ const vertex = /* glsl */ `
 const fragment = /* glsl */ `
   precision highp float;
   uniform sampler2D tMap;
-  uniform float uActive;
-  uniform float uHover;
+  uniform float uActive;   // opacity multiplier (used for exiting cards only)
+  uniform float uHover;    // mouse hover state, 0-1
+  uniform float uFocus;    // 1 for the current (front) card, 0 otherwise
   varying vec2 vUv;
   void main() {
     vec4 tex = texture2D(tMap, vUv);
     float a = clamp(uActive, 0.0, 1.0);
-    vec3 col = tex.rgb * mix(0.72, 1.0, a);
-    col += vec3(0.06, 0.09, 0.16) * uHover;
+
+    // Glow on the border when the card is focused or hovered.
+    // Distance to the nearest edge, in UV space:
+    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+    float ring = smoothstep(0.03, 0.0, edge);              // 1 near border
+    float glow = smoothstep(0.10, 0.0, edge) * 0.5;        // soft outer glow
+    float highlight = clamp(uFocus + uHover * 0.6, 0.0, 1.0);
+
+    vec3 col = tex.rgb;
+    col += vec3(0.42, 0.58, 1.00) * (ring + glow) * highlight;
+
     gl_FragColor = vec4(col, tex.a * a);
   }
 `;
@@ -127,9 +137,10 @@ function drawCardTexture(canvas: HTMLCanvasElement, data: CardData) {
     ctx.fill();
   }
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-  ctx.lineWidth = 1;
-  roundRect(ctx, 0.5, 0.5, W - 1, H - 1, 24);
+  // Stronger border so the boundary of every card is unmistakable
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 1, 1, W - 2, H - 2, 24);
   ctx.stroke();
 
   const PAD = 32;
@@ -183,11 +194,11 @@ function drawCardTexture(canvas: HTMLCanvasElement, data: CardData) {
   ctx.fillStyle = 'rgba(203, 213, 225, 0.88)';
   wrap(ctx, data.description, PAD, cursorY, W - PAD * 2, 22, 6);
 
-  // Tags at bottom
+  // Tags row
   ctx.font = '600 10px system-ui';
   ctx.textBaseline = 'middle';
   let tagX = PAD;
-  const tagY = H - PAD - 24;
+  const tagY = H - PAD - 68;
   for (const tag of data.tags) {
     const label = tag.toUpperCase();
     const tw = ctx.measureText(label).width;
@@ -202,6 +213,36 @@ function drawCardTexture(canvas: HTMLCanvasElement, data: CardData) {
     ctx.fillText(label, tagX + 9, tagY + 12);
     tagX += tagW + 6;
   }
+
+  // "VER PROYECTO →" pill — makes the interactive intent explicit
+  const cta = 'VER PROYECTO';
+  ctx.font = '700 12px system-ui';
+  const ctaTw = ctx.measureText(cta).width;
+  const ctaW = ctaTw + 46; // extra room for arrow
+  const ctaH = 34;
+  const ctaX = PAD;
+  const ctaY = H - PAD - ctaH;
+  ctx.fillStyle   = 'rgba(59, 114, 245, 0.95)';
+  ctx.strokeStyle = 'rgba(107, 156, 255, 0.6)';
+  ctx.lineWidth   = 1.5;
+  roundRect(ctx, ctaX, ctaY, ctaW, ctaH, ctaH / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(cta, ctaX + 16, ctaY + ctaH / 2 + 1);
+  // arrow
+  const ax = ctaX + 16 + ctaTw + 10;
+  const ay = ctaY + ctaH / 2;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth   = 2;
+  ctx.beginPath();
+  ctx.moveTo(ax, ay);
+  ctx.lineTo(ax + 12, ay);
+  ctx.moveTo(ax + 8, ay - 4);
+  ctx.lineTo(ax + 12, ay);
+  ctx.lineTo(ax + 8, ay + 4);
+  ctx.stroke();
 }
 
 /* Video card: image thumbnail + title/tag ---------------------------------- */
@@ -216,6 +257,12 @@ function drawVideoTexture(canvas: HTMLCanvasElement, data: CardData) {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
   roundRect(ctx, 0, 0, W, H, 24);
   ctx.fill();
+
+  // Stronger border so the card boundary is obvious
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 1, 1, W - 2, H - 2, 24);
+  ctx.stroke();
 
   // Clip image to a rounded rect on top
   const IMG_H = Math.round(H * 0.55);
@@ -277,8 +324,35 @@ function drawVideoTexture(canvas: HTMLCanvasElement, data: CardData) {
     ty += 8;
     ctx.font = '400 13px system-ui';
     ctx.fillStyle = 'rgba(203, 213, 225, 0.75)';
-    wrap(ctx, data.description, tx, ty, W - tx * 2, 18, 3);
+    wrap(ctx, data.description, tx, ty, W - tx * 2, 18, 2);
   }
+
+  // "REPRODUCIR ▶" pill so the interactive intent is explicit
+  const cta = 'REPRODUCIR';
+  ctx.font = '700 12px system-ui';
+  const ctaTw = ctx.measureText(cta).width;
+  const ctaW  = ctaTw + 44;
+  const ctaH  = 32;
+  const ctaX  = tx;
+  const ctaY  = H - 24 - ctaH;
+  ctx.fillStyle   = 'rgba(220, 38, 38, 0.95)';
+  ctx.strokeStyle = 'rgba(248, 113, 113, 0.7)';
+  ctx.lineWidth   = 1.5;
+  roundRect(ctx, ctaX, ctaY, ctaW, ctaH, ctaH / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(cta, ctaX + 14, ctaY + ctaH / 2 + 1);
+  // triangle
+  const tPx = ctaX + 14 + ctaTw + 10;
+  const tPy = ctaY + ctaH / 2;
+  ctx.beginPath();
+  ctx.moveTo(tPx, tPy - 5);
+  ctx.lineTo(tPx, tPy + 5);
+  ctx.lineTo(tPx + 8, tPy);
+  ctx.closePath();
+  ctx.fill();
 }
 
 /* Read DOM card into CardData ---------------------------------------------- */
@@ -383,6 +457,7 @@ function initSection(section: HTMLElement) {
           tMap:    { value: texture },
           uActive: { value: 0 },
           uHover:  { value: 0 },
+          uFocus:  { value: 0 },
         },
         transparent: true,
         depthTest: false,
@@ -468,18 +543,17 @@ function initSection(section: HTMLElement) {
         let uA = 0;
 
         if (t <= 0) {
-          // Behind or current — stacked, peeking from below current
+          // Behind or current — stacked, peeking from below the current one.
+          // Fully opaque so the boundary of every card stays crisp.
           const d = -t;
           x = 0;
-          y = -d * 0.09;                          // slight offset (deck peek)
-          z = -d * 0.55;                          // push back in depth
-          rotZ = -d * 0.025;                      // small tilt
+          y = -d * 0.09;
+          z = -d * 0.55;
+          rotZ = -d * 0.025;
           scale = 1 - d * 0.06;
-          // full opacity for the closest ~1.5 cards, fade the rest
-          if (d < 1.5)      uA = 1 - d * 0.08;
-          else              uA = Math.max(0, 1 - (d - 1.5) / 2);
+          uA = 1;
         } else {
-          // Exiting — fly up-and-right, tilt, fade
+          // Exiting — fly up-and-right, tilt, fade quickly so it clears the way
           const e = smoothstep(0, 1, t);
           x = e * 1.2;
           y = e * 2.2;
@@ -487,7 +561,7 @@ function initSection(section: HTMLElement) {
           rotZ = -e * 0.42;
           rotY = e * 0.18;
           scale = 1 - e * 0.15;
-          uA = Math.max(0, 1 - t * 1.35);
+          uA = 1 - smoothstep(0.15, 0.85, t);
         }
 
         // Apply hover: only the current card responds
@@ -503,6 +577,9 @@ function initSection(section: HTMLElement) {
         it.mesh.scale.set(scale, scale, scale);
         (it.mesh.program.uniforms.uActive as any).value = uA;
         (it.mesh.program.uniforms.uHover as any).value  = it.hover;
+        // Focus glow only for the current card (t closest to 0)
+        (it.mesh.program.uniforms.uFocus as any).value  =
+          Math.abs(t) < 0.4 ? Math.max(0, 1 - Math.abs(t) / 0.4) : 0;
       });
 
       currentIdx = closest;
