@@ -122,13 +122,38 @@ export function initHeroWebGL(canvas: HTMLCanvasElement) {
   const mouseTarget = { x: 0.5, y: 0.5 };
   const mouse       = { x: 0.5, y: 0.5 };
 
+  // Inline styles as a safety net — the same CSS-race that hit the carousel
+  // canvas can leave this one stuck at its 300x150 attribute default before
+  // .hero-canvas resolves.
+  Object.assign(canvas.style, {
+    position: 'absolute',
+    inset: '0',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    display: 'block',
+  } satisfies Partial<CSSStyleDeclaration>);
+
   function resize() {
-    const rect = canvas.getBoundingClientRect();
-    renderer.setSize(rect.width, rect.height);
-    program.uniforms.uResolution.value.set(rect.width, rect.height);
+    // Measure the parent section, not the canvas — the canvas can still be
+    // reporting the attribute default at first-paint even after CSS applies.
+    const host = canvas.parentElement ?? canvas;
+    const rect = host.getBoundingClientRect();
+    const w = Math.max(1, rect.width);
+    const h = Math.max(1, rect.height);
+    renderer.setSize(w, h);
+    program.uniforms.uResolution.value.set(w, h);
   }
   resize();
+  // Re-run after layout has definitely settled
+  requestAnimationFrame(resize);
   window.addEventListener('resize', resize);
+  // Observe the parent so it re-sizes if the hero grows/shrinks
+  if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(canvas.parentElement);
+  }
 
   const onPointer = (e: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
