@@ -209,6 +209,27 @@ a, button, [role="button"], [data-cursor-hover] { cursor: none; }
 }
 [data-circular-card] > * { min-height: 0; } /* let flex children shrink */
 
+/* WebGL carousel overlay. When active, the canvas paints on top of the pin
+   and the CSS 3D DOM cards fade out but stay hit-testable so keyboard
+   navigation, screen readers, and click-throughs to real URLs keep working. */
+.wcg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: auto;
+  display: block;
+}
+.has-webgl-carousel [data-circular-wheel] {
+  opacity: 0;
+  pointer-events: none;
+}
+.has-webgl-carousel [data-circular-card] {
+  /* Kept in the DOM for a11y — clicks are routed via the canvas overlay */
+  pointer-events: none;
+}
+
 /* Center hint (subtle gradient anchor for the wheel) */
 [data-circular-scroll]::before {
   content: "";
