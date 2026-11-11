@@ -175,8 +175,12 @@ html { background: var(--c-paper); }
 }
 
 /* Section skeleton */
+/* Side gutter shared by every Papel section — matches the nav/footer px-6 */
+:root { --gutter: 24px; }
+@media (max-width: 380px) { :root { --gutter: 20px; } }
+
 .tinta-section {
-  width: 100%;
+  width: calc(100% - 2 * var(--gutter));
   max-width: 1080px;
   margin: 0 auto;
   padding: 88px 0;
@@ -599,7 +603,9 @@ body * { cursor: none; }
 }
 .tinta-contact__mail:hover { color: var(--c-piedra); }
 .tinta-contact__mail-address {
-  font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+  font-size: clamp(1.35rem, 5.2vw, 2.6rem);
+  min-width: 0;
+  overflow-wrap: anywhere;
   letter-spacing: -0.02em;
 }
 .tinta-contact__mail-arrow {
@@ -1064,4 +1070,13 @@ body * { cursor: none; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .tinta-theme-btn .icon-sun { display: block; }
   :root:not([data-theme="light"]) .tinta-theme-btn .icon-moon { display: none; }
+}
+
+
+/* ── Mobile gutters — kept last so they win over earlier shorthands ──
+   Mobile: hero and its scroll cue line up with the nav gutter */
+@media (max-width: 640px) {
+  .tinta-hero { padding-left: var(--gutter); padding-right: var(--gutter); }
+  .tinta-hero__scroll-cue { left: var(--gutter); }
+  .tinta-section { padding-top: 64px; padding-bottom: 64px; gap: 32px; }
 }
