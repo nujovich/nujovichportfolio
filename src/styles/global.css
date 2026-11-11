@@ -656,6 +656,7 @@ body * { cursor: none; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transition: background 0.5s ease, border-color 0.5s ease;
 }
 .tinta-feature__logo {
   width: 46%;
@@ -1030,12 +1031,14 @@ body * { cursor: none; }
 /* The Ink hero and a dark page share a ground: a hairline keeps the seam. */
 :root[data-theme="dark"] .tinta-hero { border-bottom: 1px solid var(--c-linea); }
 :root[data-theme="dark"] .tinta-feature__logo { filter: grayscale(1) invert(1) brightness(0.92); }
-:root[data-theme="dark"] .tinta-feature:hover .tinta-feature__logo { filter: grayscale(1) invert(1) brightness(1.08); }
+:root[data-theme="dark"] .tinta-feature:hover .tinta-feature__media { background: #F1EEE8; border-color: #F1EEE8; }
+:root[data-theme="dark"] .tinta-feature:hover .tinta-feature__logo { filter: none; }
 :root[data-theme="dark"] .tinta-about__photo { filter: grayscale(0.25) contrast(1.02) brightness(0.92); }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .tinta-hero { border-bottom: 1px solid var(--c-linea); }
   :root:not([data-theme="light"]) .tinta-feature__logo { filter: grayscale(1) invert(1) brightness(0.92); }
-  :root:not([data-theme="light"]) .tinta-feature:hover .tinta-feature__logo { filter: grayscale(1) invert(1) brightness(1.08); }
+  :root:not([data-theme="light"]) .tinta-feature:hover .tinta-feature__media { background: #F1EEE8; border-color: #F1EEE8; }
+  :root:not([data-theme="light"]) .tinta-feature:hover .tinta-feature__logo { filter: none; }
   :root:not([data-theme="light"]) .tinta-about__photo { filter: grayscale(0.25) contrast(1.02) brightness(0.92); }
 }
 
