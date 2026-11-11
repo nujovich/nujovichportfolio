@@ -599,174 +599,213 @@ body * { cursor: none; }
 .tinta-contact__social:hover { color: #6E6A62; }
 .tinta-contact__social:hover .tinta-contact__social-arrow { transform: translate(4px, -4px); color: #14130F; }
 
-/* Post-it board — sits over Papel with a very subtle warm wash */
-.corkboard {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(201, 194, 182, 0.30), transparent 55%),
-    radial-gradient(ellipse at 80% 70%, rgba(201, 194, 182, 0.20), transparent 60%);
-  pointer-events: none;
-}
+/* ── 03 Proyectos — portadas editoriales + índice "También" ── */
+.tinta-features { display: flex; flex-direction: column; gap: 72px; }
 
-.postit-grid {
+.tinta-feature {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3rem 2.5rem;
-  padding: 1.5rem 0.5rem 3rem;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
 }
-@media (max-width: 900px) {
-  .postit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 1.5rem; }
+.tinta-feature--reverse .tinta-feature__media { order: 2; }
+
+.tinta-feature__media {
+  aspect-ratio: 4 / 3;
+  background: #F1EEE8;
+  border: 1px solid #E2DED6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
-@media (max-width: 620px) {
-  .postit-grid { grid-template-columns: 1fr; gap: 2rem; padding: 1rem 0; }
+.tinta-feature__logo {
+  width: 46%;
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tinta-feature__logo--wide { width: 64%; }
+.tinta-feature:hover .tinta-feature__logo {
+  filter: grayscale(0);
+  transform: scale(1.04);
 }
 
-.postit {
-  --rot: 0deg;
-  --tx: 0px;
-  --ty: 0px;
-  position: relative;
+.tinta-feature__body { display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.tinta-feature__title {
+  margin: 0;
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 5vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #14130F;
+}
+.tinta-feature__desc { margin: 0; font-size: 15px; line-height: 1.75; color: #4A463F; }
+
+.tinta-facts {
+  margin: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  border-top: 1px solid #14130F;
+}
+.tinta-facts dt,
+.tinta-facts dd { padding: 10px 0; border-bottom: 1px solid #E2DED6; margin: 0; }
+.tinta-facts dt {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6E6A62;
+  padding-top: 12px;
+}
+.tinta-facts dd { font-size: 14px; color: #14130F; }
+
+.tinta-feature__cta {
+  font-size: 13px;
+  font-weight: 500;
+  color: #14130F;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.tinta-feature__cta span { display: inline-block; transition: transform 0.25s ease; }
+.tinta-feature__cta:hover span { transform: translateX(4px); }
+
+.tinta-more__label {
+  display: block;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #14130F;
+}
+.tinta-more__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 48px;
+}
+.tinta-more__item {
   display: flex;
   flex-direction: column;
-  padding: 22px 22px 20px;
-  min-height: 260px;
-  color: #14130F; /* Tinta */
+  gap: 8px;
+  padding: 24px 0;
+  border-bottom: 1px solid #E2DED6;
+  color: #14130F;
   text-decoration: none;
-  text-align: left;
-  border: 0;
-  font-family: 'Kalam', 'Caveat', 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', system-ui, cursive;
-  transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
-  /* Warmer, more paper-like drop shadow */
-  box-shadow:
-    0 2px 4px rgba(20, 19, 15, 0.14),
-    0 14px 26px rgba(20, 19, 15, 0.30);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
 }
-.postit:hover,
-.postit:focus-visible {
-  transform: translate(var(--tx), calc(var(--ty) - 8px)) rotate(calc(var(--rot) * 0.35)) scale(1.03);
-  box-shadow:
-    0 4px 6px rgba(20, 19, 15, 0.20),
-    0 26px 44px rgba(20, 19, 15, 0.42);
-  z-index: 10;
-  outline: none;
+.tinta-more__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.tinta-more__title {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  transition: opacity 0.25s ease;
 }
-@media (max-width: 620px) {
-  /* Reduce transform offset on small screens so cards don't clip */
-  .postit { --tx: 0px; --ty: 0px; }
-}
+.tinta-more__item:hover .tinta-more__title { opacity: 0.6; }
+.tinta-more__desc { font-size: 14px; line-height: 1.6; color: #4A463F; }
 
-/* Reveal integration: keep the rotation while fading in */
-[data-reveal].postit           { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 40px)) rotate(var(--rot)); }
-[data-reveal].postit.is-visible { opacity: 1; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
-
-/* Paper tape at the top-center — warm off-white to match the Tinta paper */
-.postit__tape {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-4deg);
-  width: 84px;
-  height: 22px;
-  background: rgba(251, 250, 248, 0.65); /* Papel */
-  border-left:  1px dashed rgba(20, 19, 15, 0.10);
-  border-right: 1px dashed rgba(20, 19, 15, 0.10);
-  box-shadow: 0 1px 3px rgba(20, 19, 15, 0.10);
-  pointer-events: none;
-}
-
-/* Color variants — Marca Tinta palette: warm cream, sand, and muted tints
-   built off Papel #FBFAF8 and Arena #C9C2B6. No saturated pastels. */
-.postit--yellow   { background: linear-gradient(150deg, #F5ECC8 0%, #E6D89A 100%); } /* Ocre */
-.postit--pink     { background: linear-gradient(150deg, #EFDCD4 0%, #DDBBB0 100%); } /* Rosa polvo */
-.postit--blue     { background: linear-gradient(150deg, #DEE1E5 0%, #BEC4CB 100%); } /* Piedra fría */
-.postit--mint     { background: linear-gradient(150deg, #DCE3D6 0%, #BBC7AE 100%); } /* Salvia */
-.postit--peach    { background: linear-gradient(150deg, #F0DAC6 0%, #DDB79A 100%); } /* Terracota */
-.postit--lavender { background: linear-gradient(150deg, #E1DEE7 0%, #C1BBD0 100%); } /* Lila apagado */
-
-.postit__head    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
-.postit__logo    { height: 44px; width: auto; object-fit: contain; }
-.postit__icon    { font-size: 2.25rem; line-height: 1; }
-.postit__badges  { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
-.postit__badge   {
-  font-family: system-ui, sans-serif;
+.tinta-pill {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
+  color: #14130F;
+  border: 1px solid #14130F;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(20, 19, 15, 0.08);
-  color: rgba(20, 19, 15, 0.7);
 }
-.postit__badge--featured { background: #14130F; color: #FBFAF8; }        /* Tinta on Papel */
-.postit__badge--progress { background: rgba(74, 70, 63, 0.9); color: #FBFAF8; } /* Grafito */
 
-.postit__title {
-  font-family: 'Kalam', 'Caveat', cursive, system-ui;
-  font-weight: 700;
-  font-size: 1.6rem;
-  line-height: 1.1;
-  margin: 4px 0 8px;
-  color: #14130F; /* Tinta */
+@media (max-width: 820px) {
+  .tinta-features { gap: 56px; }
+  .tinta-feature { grid-template-columns: 1fr; gap: 24px; }
+  .tinta-feature--reverse .tinta-feature__media { order: 0; }
+  .tinta-more__grid { grid-template-columns: 1fr; }
 }
-.postit__title--sm { font-size: 1.15rem; margin-top: 10px; }
-.postit__desc {
-  font-family: 'Kalam', 'Caveat', cursive, system-ui;
-  font-size: 0.95rem;
-  line-height: 1.3;
-  color: rgba(74, 70, 63, 0.92); /* Grafito */
-  flex: 1;
-}
-.postit__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 12px;
-  font-family: system-ui, sans-serif;
-}
-.postit__tag {
-  font-size: 11px;
-  font-weight: 600;
-  color: rgba(74, 70, 63, 0.75);           /* Grafito */
-  background: rgba(20, 19, 15, 0.06);      /* Tinta wash */
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-.postit__tag--dark { background: rgba(20, 19, 15, 0.16); color: rgba(20, 19, 15, 0.82); }
 
-/* Video-flavored post-it */
-.postit--video { padding: 14px 14px 18px; min-height: 260px; }
-.postit__thumb {
+/* ── 04 Charlas & Videos — hoja de contactos en B/N ── */
+.tinta-contact-sheet {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px 24px;
+}
+.tinta-reel { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.tinta-reel--featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: end;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #E2DED6;
+}
+.tinta-reel--featured .tinta-reel__caption { gap: 12px; }
+
+.tinta-reel__frame {
   position: relative;
-  border-radius: 4px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+  background: #14130F;
   overflow: hidden;
-  aspect-ratio: 16 / 10;
-  background: #000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
-.postit__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.postit__play {
+.tinta-reel__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.1) brightness(0.9);
+  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tinta-reel__frame:hover img,
+.tinta-reel__frame:focus-visible img {
+  filter: grayscale(0) contrast(1) brightness(1);
+  transform: scale(1.03);
+}
+.tinta-reel__frame:focus-visible { outline: 2px solid #14130F; outline-offset: 3px; }
+.tinta-reel__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.tinta-reel__play {
   position: absolute;
   top: 50%; left: 50%;
+  width: 52px; height: 52px;
   transform: translate(-50%, -50%);
-  width: 44px; height: 44px;
-  background: #dc2626;
-  color: #fff;
+  border: 1px solid #FBFAF8;
   border-radius: 999px;
+  color: #FBFAF8;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(20, 19, 15, 0.35);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.postit--video:hover .postit__play,
-.postit--video:focus-visible .postit__play { transform: translate(-50%, -50%) scale(1.12); }
-.postit__meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.tinta-reel--featured .tinta-reel__play { width: 76px; height: 76px; }
+.tinta-reel__frame:hover .tinta-reel__play,
+.tinta-reel__frame:focus-visible .tinta-reel__play {
+  background: #FBFAF8;
+  color: #14130F;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.tinta-reel__caption { display: flex; flex-direction: column; gap: 6px; }
+.tinta-reel__title { font-size: 16px; line-height: 1.35; color: #14130F; }
+.tinta-reel--featured .tinta-reel__title {
+  font-family: 'Instrument Serif', ui-serif, serif;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+@media (max-width: 900px) {
+  .tinta-contact-sheet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tinta-reel--featured { grid-template-columns: 1fr; gap: 16px; padding-bottom: 32px; }
+}
+@media (max-width: 620px) {
+  .tinta-contact-sheet { grid-template-columns: 1fr; gap: 32px; }
+}
 
 /* Circular (3D cylindrical carousel) scroll — kept for any legacy sections
    that still opt in with data-circular-scroll (currently none). */

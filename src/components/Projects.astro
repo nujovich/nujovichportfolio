@@ -2,130 +2,121 @@
 import { Image } from "astro:assets";
 import mermeladaLogo from "../assets/mermelada.png";
 
-const projects = [
+// Destacados: se muestran como "portadas" editoriales con ficha técnica.
+const features = [
   {
+    eyebrow: "Destacado 01 · Comunidad",
     title: "Mermelada Tech",
     description:
       "Comunidad tech inclusiva para mujeres y personas no binarias en tecnología. Meetups, workshops y charlas.",
-    tags: ["Comunidad", "Tech", "Inclusión"],
     logo: mermeladaLogo,
+    facts: [
+      { label: "Tipo", value: "Comunidad" },
+      { label: "Formatos", value: "Meetups · Workshops · Charlas" },
+      { label: "Foco", value: "Inclusión en tech" },
+    ],
     url: "https://linktr.ee/mermeladatech",
-    featured: true,
+    cta: "Linktree",
   },
   {
+    eyebrow: "Destacado 02 · Cliente",
     title: "Awake",
     description:
       "Diseño y desarrollo de la web de Awake, agencia de marketing digital en Alicante.",
-    tags: ["Web", "Marketing", "Alicante"],
     logoUrl: "/awake-logo.svg",
+    facts: [
+      { label: "Rol", value: "Diseño + desarrollo" },
+      { label: "Tipo", value: "Web corporativa" },
+      { label: "Lugar", value: "Alicante" },
+    ],
     url: "https://www.awakemarketing.es/",
-    featured: true,
+    cta: "Ver sitio",
   },
+];
+
+// Resto: índice compacto.
+const more = [
   {
     title: "Mint",
-    description:
-      "Herramienta open source para auditar CSS. Playground web + CLI, en construcción activa.",
-    tags: ["CSS", "DevTool", "Open Source"],
-    icon: "🌱",
+    description: "Herramienta open source para auditar CSS. Playground web + CLI, en construcción activa.",
+    meta: "CSS · DevTool · Open Source",
     url: "https://github.com/nujovich/mint",
-    featured: false,
     inProgress: true,
   },
   {
     title: "WTM GDG Madrid",
-    description:
-      "Desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como Ambassador desde 2023.",
-    tags: ["WTM", "GDG", "Open Source"],
-    logoUrl: "/wtm-madrid-logo.png",
+    description: "Desarrollo y mantenimiento de la web oficial de Women Techmakers GDG Madrid como Ambassador.",
+    meta: "WTM · GDG · 2023—",
     url: "https://wtmgdgmadrid.github.io/",
-    featured: false,
   },
-  {
-    title: "Seguridad Web",
-    description:
-      "Charlas y talleres sobre OWASP Top 10 y buenas prácticas de seguridad en aplicaciones modernas.",
-    tags: ["Seguridad", "OWASP"],
-    icon: "🔐",
-    url: "#videos",
-    featured: false,
-  },
-  {
-    title: "Commit Conf 2024",
-    description:
-      "Speaker en una de las conferencias de desarrollo de software más importantes de España.",
-    tags: ["Speaker", "Conferencia"],
-    icon: "🎤",
-    url: "#videos",
-    featured: false,
-  },
-];
-
-// Per-project post-it visual randomness (deterministic per index)
-const styles = [
-  { color: "yellow",   rot: -4, tx:  -6, ty:   0 },
-  { color: "pink",     rot:  3, tx:  10, ty:  24 },
-  { color: "blue",     rot: -2, tx:  -8, ty: -14 },
-  { color: "mint",     rot:  5, tx:  14, ty:  30 },
-  { color: "peach",    rot: -3, tx:  -4, ty:   6 },
-  { color: "lavender", rot:  4, tx:   8, ty: -18 },
 ];
 ---
 
-<section
-  id="projects"
-  class="tinta-section tinta-projects"
->
-  <!-- Corkboard warm wash -->
-  <div class="corkboard" aria-hidden="true"></div>
-
+<section id="projects" class="tinta-section tinta-projects">
   <div class="tinta-section__header">
     <span class="tinta-section-num">03</span>
-    <h2 class="tinta-h2" data-reveal>Proyectos & Charlas</h2>
+    <h2 class="tinta-h2" data-reveal>Proyectos</h2>
   </div>
 
   <p class="tinta-lede" data-reveal style="--reveal-delay: 80ms">
-    Un tablero de notas: cada papel, una cosa hecha o dicha.
-    Comunidad, herramientas, charlas.
+    Cosas que construí, mantengo o impulso desde la comunidad.
   </p>
 
-  <div class="postit-grid">
+  <div class="tinta-features">
+    {
+      features.map(({ eyebrow, title, description, logo, logoUrl, facts, url, cta }, i) => (
+        <article class={`tinta-feature ${i % 2 === 1 ? "tinta-feature--reverse" : ""}`} data-reveal>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tinta-feature__media"
+            data-cursor-label="Ver"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            {logo ? (
+              <Image src={logo} alt="" width={320} height={320} class="tinta-feature__logo" loading="lazy" />
+            ) : (
+              <img src={logoUrl} alt="" class="tinta-feature__logo tinta-feature__logo--wide" loading="lazy" />
+            )}
+          </a>
+          <div class="tinta-feature__body">
+            <span class="tinta-eyebrow">{eyebrow}</span>
+            <h3 class="tinta-feature__title">{title}</h3>
+            <p class="tinta-feature__desc">{description}</p>
+            <dl class="tinta-facts">
+              {facts.map(({ label, value }) => (
+                <>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </>
+              ))}
+            </dl>
+            <a href={url} target="_blank" rel="noopener noreferrer" class="tinta-feature__cta" data-cursor-label="Ver">
+              {cta} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="tinta-more" data-reveal>
+    <span class="tinta-eyebrow tinta-more__label">También</span>
+    <div class="tinta-more__grid">
       {
-        projects.map(
-          ({ title, description, tags, icon, logo, logoUrl, url, featured, inProgress }, i) => {
-            const s = styles[i % styles.length];
-            return (
-              <a
-                href={url}
-                target={url.startsWith("http") ? "_blank" : undefined}
-                rel={url.startsWith("http") ? "noopener noreferrer" : undefined}
-                class={`postit postit--${s.color}`}
-                data-cursor-label={url.startsWith("http") ? "Ver" : "Ir"}
-                data-reveal
-                style={`--rot: ${s.rot}deg; --tx: ${s.tx}px; --ty: ${s.ty}px; --reveal-delay: ${i * 90}ms;`}
-              >
-                <span class="postit__tape" aria-hidden="true"></span>
-                <div class="postit__head">
-                  {logo ? (
-                    <Image src={logo} alt={title} height={56} width={56} class="postit__logo" loading="lazy" />
-                  ) : logoUrl ? (
-                    <img src={logoUrl} alt={title} class="postit__logo" loading="lazy" />
-                  ) : (
-                    <span class="postit__icon" aria-hidden="true">{icon}</span>
-                  )}
-                  <div class="postit__badges">
-                    {featured   && <span class="postit__badge postit__badge--featured">★ Destacado</span>}
-                    {inProgress && <span class="postit__badge postit__badge--progress">● En curso</span>}
-                  </div>
-                </div>
-                <h3 class="postit__title">{title}</h3>
-                <p class="postit__desc">{description}</p>
-                <div class="postit__tags">
-                  {tags.map((tag) => <span class="postit__tag">#{tag}</span>)}
-                </div>
-              </a>
-            );
-          },
-        )
+        more.map(({ title, description, meta, url, inProgress }) => (
+          <a href={url} target="_blank" rel="noopener noreferrer" class="tinta-more__item" data-cursor-label="Ver">
+            <span class="tinta-more__head">
+              <span class="tinta-more__title">{title}</span>
+              {inProgress && <span class="tinta-pill">● En curso</span>}
+            </span>
+            <span class="tinta-more__desc">{description}</span>
+            <span class="tinta-mono">{meta}</span>
+          </a>
+        ))
       }
+    </div>
   </div>
 </section>
